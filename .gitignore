@@ -1,0 +1,12 @@
+# Environnement virtuel
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Fichiers d'assets lourds ou locaux
+.streamlit/
+# AC_Fiche de perso.jpg
+AC_Fiche de perso_2.jpg
+Fiche_*.jpg
+Fiche_*.png
