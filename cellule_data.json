@@ -1,0 +1,390 @@
+{
+    "descendants": {
+        "subject_1783170266": {
+            "nom": "Lucas SINCLAIR",
+            "citation": "Bof",
+            "entrave": "Curieux",
+            "traits": "Endurant, Fort",
+            "equipement_emblematique": [
+                "Couteau",
+                "Fusil"
+            ],
+            "equipement_standard": "Moto, Téléphone, Lunerttes, Radio à pile",
+            "approches": {
+                "action": 1,
+                "discretion": 3,
+                "intellect": 1,
+                "social": 3
+            },
+            "langues": "Anglais, Espgnol",
+            "ancetre_prioritaire": "Kassandra",
+            "niveau_xp": 3,
+            "competences_actives": [
+                "CHARME",
+                "-- Emplacement Vide --",
+                "-- Emplacement Vide --"
+            ]
+        },
+        "subject_1783172364": {
+            "nom": "Aude",
+            "citation": "Dansons",
+            "entrave": "truc",
+            "traits": "Chanteause, blbla",
+            "equipement_emblematique": [
+                "Flute",
+                "Couteau"
+            ],
+            "equipement_standard": "",
+            "approches": {
+                "action": 3,
+                "discretion": 3,
+                "intellect": 2,
+                "social": 2
+            },
+            "langues": "Français",
+            "ancetre_prioritaire": "Venator",
+            "niveau_xp": 4,
+            "competences_actives": [
+                "COMBATTANT NÉ",
+                "COMPAGNON ANIMAL",
+                "-- Emplacement Vide --"
+            ]
+        },
+        "subject_1783186851": {
+            "nom": "Roberto Vagas",
+            "citation": "Ola Ombre.",
+            "entrave": "Réfléchis peu",
+            "traits": "Courageaux, Roublard",
+            "equipement_emblematique": [
+                "Couteau",
+                "Pistolet"
+            ],
+            "equipement_standard": "",
+            "approches": {
+                "action": 2,
+                "discretion": 3,
+                "intellect": 3,
+                "social": 2
+            },
+            "langues": "Espagnol, Anglais",
+            "ancetre_prioritaire": "Reboante",
+            "niveau_xp": 1,
+            "competences_actives": [
+                "CHARME",
+                "-- Emplacement Vide --",
+                "-- Emplacement Vide --"
+            ]
+        }
+    },
+    "competences_globales": {
+        "AGILE": "Lorsque vous effectuez un test de Discrétion lors d'une infiltration, vous bénéficiez de 1 majoration gratuite.",
+        "ALERTE": "Lorsque vous effectuez un test de Réaction, vous pouvez relancer jusqu'à 2 Abstergo.",
+        "ASSASSINAT": "Lorsque vous effectuez un test de Discrétion lors d'une situation où vous faites appel à vos capacités d'Assassin, vous pouvez considérer jusqu'à 2 Intellect comme 1 correspondance supplémentaire chacun.",
+        "BLUFF": "Lorsque vous effectuez un test Social lors d'un acte de tromperie, vous bénéficiez de 1 majoration gratuite.",
+        "CHARME": "Lorsque vous effectuez un test Social lors d'une situation où vous faites appel à vos capacités de séduction, vous pouvez ajouter 1 correspondance. De plus, lorsque vous effectuez un test Social, vous pouvez utiliser 2 Intellect pour obtenir une information supplémentaire de la part de quelqu'un ou de quelque chose impliqué dans la scène.",
+        "COMBATTANT NÉ": "Lorsque vous effectuez un test d'Action en combat, vous obtenez une majoration gratuite.",
+        "COMPAGNON ANIMAL": "Votre esprit et celui de votre animal ne font qu'un, ce qui vous permet de voir à travers ses yeux et de contrôler ses mouvements. Votre compagnon peut vous aider en combat ou faire diversion, détournant l'attention des gens. Enfin, lorsque vous effectuez un test d'Action ou de Discrétion, vous pouvez relancer 1 Abstergo.",
+        "COURSE LIBRE": "Lorsque vous pratiquez la course libre, vous pouvez ajouter 1 correspondance à tout test d'Action lié. De plus, lorsque vous effectuez un test d'Action, vous pouvez utiliser 2 Discrétion pour disparaître du champ de vision de vos adversaires.",
+        "CRAN": "Lorsque vous effectuez un test d'Intellect, vous pouvez considérer jusqu'à 1 Action comme une correspondance supplémentaire.",
+        "DÉPLACEMENTS STRATÉGIQUES": "Lorsque vous effectuez un test d'Action, vous pouvez considérer jusqu'à 1 Intellect comme 1 correspondance supplémentaire.",
+        "FORMATION DE LA CONFRÉRIE": "Lorsque vous utilisez une arme secrète, vous pouvez considérer 1 Credo comme 1 correspondance supplémentaire. Ceci en plus de toute correspondance accordée par l'activation d'un équipement emblématique (arme secrète).",
+        "HYPNOSE": "Lorsque vous effectuez un test Social, vous pouvez considérer jusqu'à 1 Discrétion comme une correspondance supplémentaire.",
+        "MOUVEMENTS TROMPEURS": "Lorsque vous effectuez un test d'Action lors d'une situation où vous faites appel à vos capacités de tromperie, vous pouvez considérer jusqu'à 2 Social comme 1 correspondance supplémentaire chacun.",
+        "OBSERVATEUR": "Lorsque vous effectuez un test d'Intellect dans une situation où vous faites appel à vos capacités d'investigation, vous pouvez considérer jusqu'à 2 Discrétion comme une correspondance supplémentaire.",
+        "PASSE-PASSE": "Lorsque vous essayez de dissimuler un petit objet ou d'en dérober un, vous pouvez ajouter 1 correspondance à tout test de Discrétion lié. En outre, lorsque vous effectuez un test d'Action ou Social, vous pouvez utiliser 2 Discrétion pour dérober un petit objet à une personne impliquée dans la scène.",
+        "PRESSION": "Lorsque vous effectuez un test Social lors d'une situation où vous faites appel à vos capacités d'intimidation, vous pouvez considérer jusqu'à 2 Action comme 1 correspondance supplémentaire chacun.",
+        "RUSE": "Lorsque vous effectuez un test d'Intellect durant une activité de bricolage, vous bénéficiez de 1 majoration gratuite.",
+        "SAPEUR": "Lorsque vous tentez de saboter un appareil, vous pouvez ajouter 1 correspondance à tout test d'Intellect lié. De plus, lorsque vous effectuez un test d'Action ou de Discrétion, vous pouvez utiliser 2 Intellect pour créer un leurre ou une diversion durant la scène.",
+        "SE CACHER AU GRAND JOUR": "Lorsque vous effectuez un test de Discrétion, vous pouvez considérer jusqu'à 1 Social comme une correspondance supplémentaire.",
+        "SENS D'AIGLE": "Le Sens d'aigle affine vos sens au point de pouvoir percevoir les battements de cœur de votre cible dans la zone ou même prévoir sa prochaine action. De plus, vous pouvez entrapercevoir les souvenirs de vos cibles lorsque vous les tuez, obtenant ainsi toutes les informations qu'elles ont à offrir.",
+        "VISION D'AIGLE": "La Vision d'aigle est une forme de perception extrasensorielle, ou « sixième sens », et l'un des dons de vos gènes Isu. Vous pouvez aisément repérer les alliés, ennemis, objectifs, sources d'informations et cibles à courte portée. En outre, lorsque vous effectuez un test d'Approche, vous pouvez considérer 1 Intellect comme 1 correspondance supplémentaire."
+    },
+    "ancetres_officiels": {
+        "romulus": {
+            "nom": "Romulus",
+            "periode": "Royauté romaine",
+            "citation": "Les mots enseignent, les exemples entraînent.",
+            "action": 2,
+            "discretion": 3,
+            "intellect": 2,
+            "social": 1,
+            "traits": "Vétéran, Déterminé",
+            "entrave": "Agressif",
+            "langues": "Étrusque, grec ancien, latin",
+            "equipement": "Bouclier, Épée, Armure de roi, Lance, Médaillon de Mars, Fronde"
+        },
+        "prima": {
+            "nom": "Prima",
+            "periode": "Royauté romaine",
+            "citation": "Nous sommes façonnés by les tempêtes que nous traversons.",
+            "action": 2,
+            "discretion": 2,
+            "intellect": 2,
+            "social": 2,
+            "traits": "Rapide, Rusée",
+            "entrave": "Intrépide",
+            "langues": "Dialecte sabin, grec ancien, latin",
+            "equipement": "Faucille, Lame dissimulée, Fronde, Livre des Lois, Brassard 'Boucliers de Mars', Bijoux"
+        },
+        "venator": {
+            "nom": "Venator",
+            "periode": "Royauté romaine",
+            "citation": "Sois le prédateur, pas la proie.",
+            "action": 2,
+            "discretion": 1,
+            "intellect": 2,
+            "social": 3,
+            "traits": "Patient, Chasseur",
+            "entrave": "Irascible",
+            "langues": "Latin",
+            "equipement": "Arc et flèches, Dague, Outre, Appât, Paillasse, Corde"
+        },
+        "gardienne_du_feu": {
+            "nom": "La Gardienne du Feu",
+            "periode": "Royauté romaine",
+            "citation": "Seuls les dieux je sers.",
+            "action": 3,
+            "discretion": 2,
+            "intellect": 2,
+            "social": 1,
+            "traits": "Fervente, Érudite",
+            "entrave": "Pieuse",
+            "langues": "Étrusque, latin, osque",
+            "equipement": "Torche de vestale, Herbes médicinales, Silex, Flasque d'huile, Fronde, Parchemins du temple"
+        },
+        "kassandra": {
+            "nom": "Kassandra",
+            "periode": "Antiquité grecque",
+            "citation": "Si j'étais ta punition, tu serais déjà mort.",
+            "action": 2,
+            "discretion": 2,
+            "intellect": 2,
+            "social": 2,
+            "traits": "Agile, Spartiate",
+            "entrave": "Clémente",
+            "langues": "Grec ancien, laconien",
+            "equipement": "Lance de Léonidas, Armure de misthios, Arc et flèches, Bouteille de feu grégeois, Phobos (cheval), Ikaros (aigle)"
+        },
+        "xenia": {
+            "nom": "Xenia",
+            "periode": "Antiquité grecque",
+            "citation": "J'ai un faible pour les choses rares.",
+            "action": 2,
+            "discretion": 3,
+            "intellect": 2,
+            "social": 1,
+            "traits": "Contacts, Pirate",
+            "entrave": "Cupidité",
+            "langues": "Grec ancien",
+            "equipement": "Marteau de guerre, Documents de contrebande, Armure, Cartes maritimes, Dague, Bourse de drachmes"
+        },
+        "herodote": {
+            "nom": "Hérodote",
+            "periode": "Antiquité grecque",
+            "citation": "Je suis un conteur, du moins, je l'étais. Cette guerre nous pousse à changer.",
+            "action": 3,
+            "discretion": 2,
+            "intellect": 1,
+            "social": 2,
+            "traits": "Érudit, Observateur",
+            "entrave": "Neutralité",
+            "langues": "Attique, dorien, grec ancien, laconien",
+            "equipement": "Cartes et documents, Bouteille de feu grégeois, Bâton de combat, Sacoche à parchemins, Nécessaire de crochetage, Dague"
+        },
+        "griffe_de_nemee": {
+            "nom": "La Griffe de Némée",
+            "periode": "Antiquité grecque",
+            "citation": "Je suis né pour porter cette épée et ce bouclier.",
+            "action": 1,
+            "discretion": 3,
+            "intellect": 2,
+            "social": 2,
+            "traits": "Hardi, Combattant d'arène",
+            "entrave": "Égoïste",
+            "langues": "Grec ancien",
+            "equipement": "Épée, Bouclier, Armure, Javelot, Rouleaux de primes, Médaillon d'Arès"
+        },
+        "major_gallagher": {
+            "nom": "Major Gallagher",
+            "periode": "Seconde Guerre mondiale",
+            "citation": "Je m'apprête à vous tuer avec cette tasse de thé.",
+            "action": 1,
+            "discretion": 2,
+            "intellect": 2,
+            "social": 3,
+            "traits": "Vigueur, Béret vert",
+            "entrave": "Code d'honneur",
+            "langues": "Allemand, anglais",
+            "equipement": "Khukuri (couteau), Browning (pistolet), Sten (mitraillette), Béret vert, Cape anti-gaz, Appareil photo Leica III"
+        },
+        "lambassadeur": {
+            "nom": "L'Ambassadeur",
+            "periode": "Seconde Guerre mondiale",
+            "citation": "Quand l'injustice devient la règle, se rebeller est un devoir.",
+            "action": 2,
+            "discretion": 2,
+            "intellect": 2,
+            "social": 2,
+            "traits": "Féroce, Rapide",
+            "entrave": "Vengeance",
+            "langues": "Allemand, anglais, français, polonais, russe",
+            "equipement": "Revolver Webley, Fusil Lebel modèle 1886, Machette (bolo), Masque à gaz, Grenade M1 « Frangible », Couteau pliant"
+        },
+        "nancy_drake": {
+            "nom": "Nancy Drake",
+            "periode": "Seconde Guerre mondiale",
+            "citation": "La liberté est la seule chose qui vaille la peine de vivre.",
+            "action": 2,
+            "discretion": 2,
+            "intellect": 2,
+            "social": 2,
+            "traits": "Impitoyable, Saboteuse",
+            "entrave": "Vengeance",
+            "langues": "Allemand, anglais, français",
+            "equipement": "Berthier modèle 92 (fusil), Luger P08 (pistolet), Grenade à manche, Grenade fumigène, Morphine, Fairbairn-Sykes (couteau)"
+        },
+        "reboante": {
+            "nom": "Reboante",
+            "periode": "Seconde Guerre mondiale",
+            "citation": "Il faut prendre parti, car il n'y a pas de courage dans la neutralité.",
+            "action": 1,
+            "discretion": 1,
+            "intellect": 3,
+            "social": 3,
+            "traits": "Altruiste, Combatif",
+            "entrave": "Passionné",
+            "langues": "Français, hébreu, italien",
+            "equipement": "Mitraillette, Explosifs, Couteau à cran d'arrêt, Vin, Grenade à manche, Pinces coupantes"
+        },
+        "josephine_boulanger": {
+            "nom": "Joséphine Boulanger",
+            "periode": "Seconde Guerre mondiale",
+            "citation": "Je danserai toute ma vie... J'aimerais mourir à bout de souffle, épuisée, à la fin d'une danse.",
+            "action": 3,
+            "discretion": 2,
+            "intellect": 2,
+            "social": 1,
+            "traits": "Espionne, Artiste",
+            "entrave": "Justice",
+            "langues": "Allemand, anglais, espagnol, français",
+            "equipement": "FP-45 Liberator (pistolet), Couteau dissimulé, Robe élégante, Partitions musicales, Briquet, Cigarettes"
+        },
+        "eivor": {
+            "nom": "Eivor",
+            "periode": "Âge des Vikings",
+            "citation": "...C'est à moi de tisser ma destinée.",
+            "action": 2,
+            "discretion": 2,
+            "intellect": 2,
+            "social": 2,
+            "traits": "Rusée, Dure à cuire",
+            "entrave": "Code d'honneur",
+            "langues": "Anglais, français, vieux norrois",
+            "equipement": "Armure du clan du Grand Corbeau, Lame secrète, Arc et flèches, Deux haches, Corde, Pendentif d'Odin"
+        },
+        "valka": {
+            "nom": "Valka",
+            "periode": "Âge des Vikings",
+            "citation": "J'ai besoin de silence pour entendre les chants de la nature.",
+            "action": 3,
+            "discretion": 2,
+            "intellect": 1,
+            "social": 2,
+            "traits": "Sage, Respectée",
+            "entrave": "Superstitieuse",
+            "langues": "Vieux norrois",
+            "equipement": "Plantes hallucinogènes, Poudres alchimiques, Runes de divination, Dague en os, Tenue de volva, Peintures rituelles"
+        },
+        "chevalier_dragon": {
+            "nom": "Le Chevalier Dragon",
+            "periode": "Âge des Vikings",
+            "citation": "Je combattrai quiconque refuse la liberté à autrui.",
+            "action": 1,
+            "discretion": 3,
+            "intellect": 2,
+            "social": 2,
+            "traits": "Stoïque, Robuste",
+            "entrave": "Impétueux",
+            "langues": "Anglais, vieux norrois",
+            "equipement": "Armure de chevalier, Claíomh Solais (épée), Outre de vin, Scutum (bouclier), Seax (couteau), Merlin (cheval)"
+        },
+        "hytham": {
+            "nom": "Hytham",
+            "periode": "Âge des Vikings",
+            "citation": "Ce n'est pas une question de valeur, mais de dévotion envers le credo.",
+            "action": 2,
+            "discretion": 1,
+            "intellect": 2,
+            "social": 3,
+            "traits": "Discipliné, Vigilant",
+            "entrave": "Idéaliste",
+            "langues": "Anglais, grec byzantin, latin, vieux norrois",
+            "equipement": "Lame secrète, Saif (épée), Dague, Bombes fumigènes, Dagues de lancer, Tunique d'acolyte"
+        },
+        "altair": {
+            "nom": "Altaïr Ibn-La'Ahad",
+            "periode": "Troisième Croisade",
+            "citation": "Je comprends maintenant que le Credo ne nous demande pas d'être libres, mais d'être sages.",
+            "action": 2,
+            "discretion": 1,
+            "intellect": 3,
+            "social": 2,
+            "traits": "Sage, Vétéran",
+            "entrave": "Impulsif",
+            "langues": "Arabe, français, grec, mongol",
+            "equipement": "Doubles lames secrètes, Cape d'assassin, Épée, Épée courte, Couteaux de lancer, Armure de cuir"
+        },
+        "shao_jun": {
+            "nom": "Shao Jun",
+            "periode": "Dynastie Ming",
+            "citation": "Tant que vous n'avez pas ressenti la soif de vengeance, vous ignorerez la rage qu'elle insuffle.",
+            "action": 2,
+            "discretion": 2,
+            "intellect": 2,
+            "social": 2,
+            "traits": "Wushu, Vigilante",
+            "entrave": "Impitoyable",
+            "langues": "Chinois, italien, japonais",
+            "equipement": "Dague à corde, Jian écarlate (épée), Fléchettes appeaux, Lame de semelle, Aiguilles de lancer, Pétards"
+        },
+        "akira": {
+            "nom": "Akira",
+            "periode": "Sengoku-Jidai",
+            "citation": "Je mourrai par le sabre. Le mien ou celui de mon ennemi.",
+            "action": 1,
+            "discretion": 3,
+            "intellect": 2,
+            "social": 2,
+            "traits": "Résistance, Honneur",
+            "entrave": "Inflexible",
+            "langues": "Japonais",
+            "equipement": "Sabre familial, Arc yumi, Armure de samouraï, Éventail pliable, Wakizashi, Gourde en bambou"
+        },
+        "mochizuki_chiyome": {
+            "nom": "Mochizuki Chiyome",
+            "periode": "Sengoku-Jidai",
+            "citation": "On enseigne aux kunoichi à triompher avant même d'avoir dégainé la blade.",
+            "action": 2,
+            "discretion": 2,
+            "intellect": 2,
+            "social": 2,
+            "traits": "Ninjutsu, Agilité",
+            "entrave": "Ambition",
+            "langues": "Chinois, japonais",
+            "equipement": "Lame secrète, Poison d'amandes, Tanto, Grappin, Tetsubishi (chausse-trappes), Torinoko (pétards)"
+        },
+        "arno_dorian": {
+            "nom": "Arno Dorian",
+            "periode": "Révolution française",
+            "citation": "Tout ce que nous faisons, tout ce que nous sommes... débute... et prend fin... avec nous.",
+            "action": 2,
+            "discretion": 2,
+            "intellect": 2,
+            "social": 2,
+            "traits": "Impitoyable, Érudit",
+            "entrave": "Rédemption",
+            "langues": "Français",
+            "equipement": "Sabre d'officier, Lame fantôme, Lame secrète, Pistolet à silex, Nécessaire de crochetage, Bombe à gaz toxique"
+        }
+    }
+}
