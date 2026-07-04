@@ -5,7 +5,6 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 import io
 import textwrap
-import os
 
 def generer_fiche_personnage_png(profil, data_globales):
     """Génère le fichier PNG avec chargement sécurisé de la police Windows et coordonnées pixels réelles."""
@@ -20,7 +19,6 @@ def generer_fiche_personnage_png(profil, data_globales):
     draw = ImageDraw.Draw(base_image)
     
     # --- 📐 CHARGEMENT STRICT DE LA POLICE WINDOWS ---
-    # On cible directement le répertoire des polices Windows pour forcer Pillow à l'utiliser
     chemin_police = "C:\\Windows\\Fonts\\arial.ttf"
     if not os.path.exists(chemin_police):
         chemin_police = "arial.ttf" # Repli local au cas où
@@ -31,30 +29,27 @@ def generer_fiche_personnage_png(profil, data_globales):
         font_scores = ImageFont.truetype(chemin_police, 34)      # Gros chiffres pour les ronds d'approches
         font_comp_title = ImageFont.truetype(chemin_police, 22)  # Titres des compétences
     except IOError:
-        # Si Windows bloque vraiment l'accès, on utilise la police par défaut mais le rendu sera altéré
         font_title = font_text = font_scores = font_comp_title = ImageFont.load_default()
 
-    # --- 🗺️ CARTOGRAPHIE EN PIXELS RÉELS (Basée sur une image de 1000px+ de large) ---
-    
     # --- 📐 RECALIBRAGE TOTAL DES COORDONNÉES PIXELS ---
     
-    # 1. Identité & Citation (Sautent par-dessus l'étiquette sombre directement dans la grande zone blanche)
+    # 1. Identité & Citation
     draw.text((450, 162), profil["nom"], fill="#1c2d37", font=font_title)
     draw.text((450, 268), profil.get("citation", ""), fill="#385d6e", font=font_text)
 
-    # 2. Approches / Difficultés (Centrées au milieu des petites cases blanches de leur propre colonne)
+    # 2. Approches / Difficultés
     draw.text((315, 342), str(profil["approches"]["action"]), fill="#b13434", font=font_scores)
     draw.text((315, 410), str(profil["approches"]["discretion"]), fill="#b13434", font=font_scores)
     draw.text((315, 476), str(profil["approches"]["intellect"]), fill="#b13434", font=font_scores)
     draw.text((315, 544), str(profil["approches"]["social"]), fill="#b13434", font=font_scores)
 
-    # 3. Caractéristiques du bas (Poussées au début des rectangles blancs horizontaux)
+    # 3. Caractéristiques du bas
     draw.text((450, 612), profil.get("traits", ""), fill="#1c2d37", font=font_text)
     draw.text((450, 646), profil.get("entrave", ""), fill="#b13434", font=font_text)
     draw.text((450, 680), profil.get("langues", "Français"), fill="#1c2d37", font=font_text)
     draw.text((450, 785), f"Ancêtre lié : {profil.get('ancetre_prioritaire', 'Aucun')}", fill="#1c2d37", font=font_text)
 
-    # 4. Équipement (Décalé vers la droite pour s'aligner sous le bandeau "ÉQUIPEMENT")
+    # 4. Équipement
     emb = profil.get("equipement_emblematique", ["", ""])
     std = profil.get("equipement_standard", "")
     liste_eq = [f"✦ {x}" for x in emb if x]
@@ -66,11 +61,10 @@ def generer_fiche_personnage_png(profil, data_globales):
         draw.text((540, y_eq), item, fill="#1c2d37", font=font_text)
         y_eq += 34
 
-    # 5. Compétences (Poussées tout à droite, au cœur des 3 grands panneaux clairs de l'Animus)
+    # 5. Compétences
     comps = profil.get("competences_actives", ["-- Emplacement Vide --", "-- Emplacement Vide --", "-- Emplacement Vide --"])
     atouts_presents = [c for c in comps if c != "-- Emplacement Vide --"]
     
-    # Les coordonnées X passent à 1100 pour atterrir directement dans les volets de droite
     coordonnees_competences = [
         (1100, 660),  # Compétence 1 (Bas)
         (1100, 370),  # Compétence 2 (Milieu)
@@ -80,13 +74,11 @@ def generer_fiche_personnage_png(profil, data_globales):
     for idx, coords in enumerate(coordonnees_competences):
         if idx < len(atouts_presents):
             c_nom = atouts_presents[idx]
-            # Titre de la compétence
             draw.text((coords[0], coords[1]), f"⚡ {c_nom}", fill="#1c2d37", font=font_comp_title)
             
-            # Contenu / Description automatique avec retour à la ligne
             c_desc = data_globales.get("competences_globales", {}).get(c_nom, "")
             if c_desc:
-                lignes_desc = textwrap.wrap(c_desc, width=32) # Moins large pour ne pas mordre le logo central
+                lignes_desc = textwrap.wrap(c_desc, width=32)
                 y_offset = coords[1] + 32
                 for ligne in lignes_desc[:4]:
                     draw.text((coords[0], y_offset), ligne, fill="#385d6e", font=font_text)
@@ -127,7 +119,6 @@ def charger_donnees():
             "VISION D'AIGLE": "La Vision d'aigle est une forme de perception extrasensorielle, ou « sixième sens », et l'un des dons de vos gènes Isu. Vous pouvez aisément repérer les alliés, ennemis, objectifs, sources d'informations et cibles à courte portée. En outre, lorsque vous effectuez un test d'Approche, vous pouvez considérer 1 Intellect comme 1 correspondance supplémentaire."
         },
         "ancetres_officiels": {
-            # --- LA ROYAUTÉ ROMAINE ---
             "romulus": {
                 "nom": "Romulus", "periode": "Royauté romaine",
                 "citation": "Les mots enseignent, les exemples entraînent.",
@@ -156,7 +147,6 @@ def charger_donnees():
                 "traits": "Fervente, Érudite", "entrave": "Pieuse", "langues": "Étrusque, latin, osque",
                 "equipement": "Torche de vestale, Herbes médicinales, Silex, Flasque d'huile, Fronde, Parchemins du temple"
             },
-            # --- ANTIQUITÉ GRECQUE ---
             "kassandra": {
                 "nom": "Kassandra", "periode": "Antiquité grecque",
                 "citation": "Si j'étais ta punition, tu serais déjà mort.",
@@ -185,7 +175,6 @@ def charger_donnees():
                 "traits": "Hardi, Combattant d'arène", "entrave": "Égoïste", "langues": "Grec ancien",
                 "equipement": "Épée, Bouclier, Armure, Javelot, Rouleaux de primes, Médaillon d'Arès"
             },
-            # --- 2NDE GUERRE MONDIALE ---
             "major_gallagher": {
                 "nom": "Major Gallagher", "periode": "Seconde Guerre mondiale",
                 "citation": "Je m'apprête à vous tuer avec cette tasse de thé.",
@@ -221,7 +210,6 @@ def charger_donnees():
                 "traits": "Espionne, Artiste", "entrave": "Justice", "langues": "Allemand, anglais, espagnol, français",
                 "equipement": "FP-45 Liberator (pistolet), Couteau dissimulé, Robe élégante, Partitions musicales, Briquet, Cigarettes"
             },
-            # --- ÂGE VIKING ---
             "eivor": {
                 "nom": "Eivor", "periode": "Âge des Vikings",
                 "citation": "...C'est à moi de tisser ma destinée.",
@@ -250,7 +238,6 @@ def charger_donnees():
                 "traits": "Discipliné, Vigilant", "entrave": "Idéaliste", "langues": "Anglais, grec byzantin, latin, vieux norrois",
                 "equipement": "Lame secrète, Saif (épée), Dague, Bombes fumigènes, Dagues de lancer, Tunique d'acolyte"
             },
-            # --- AUTRES ARCHIVES ---
             "altair": {
                 "nom": "Altaïr Ibn-La'Ahad", "periode": "Troisième Croisade",
                 "citation": "Je comprends maintenant que le Credo ne nous demande pas d'être libres, mais d'être sages.",
@@ -423,7 +410,7 @@ tab_descendants, tab_ancetres, tab_competences = st.tabs([
 ])
 
 # =========================================================================
-# 🧬 SUPSUPPROTOCOLE CENTRALISÉ (POP-UP MODALE DE SÉCURITÉ)
+# 🧬 PROTOCOLE CENTRALISÉ (POP-UP MODALE DE SÉCURITÉ)
 # =========================================================================
 @st.dialog("🚨 PROTOCOLE DE PURGE DE DONNÉES SECRÈTES")
 def valider_suppression_donnees(type_donnee, cle, intitule_texte):
@@ -454,7 +441,6 @@ def valider_suppression_donnees(type_donnee, cle, intitule_texte):
 with tab_descendants:
     st.header("🦅 Matrice Animus : Registre des Descendants")
 
-    # Initialisations des variables de session globales
     if "tmp_repart" not in st.session_state: st.session_state.tmp_repart = "3, 3, 2, 2"
     if "tmp_act" not in st.session_state: st.session_state.tmp_act = 3
     if "tmp_disc" not in st.session_state: st.session_state.tmp_disc = 3
@@ -465,7 +451,6 @@ with tab_descendants:
     if "active_view_id" not in st.session_state: st.session_state.active_view_id = None
     if "wizard_step" not in st.session_state: st.session_state.wizard_step = 1
 
-    # Barre de recherche globale haute
     col_tools_1, col_tools_2 = st.columns([7, 3])
     with col_tools_2:
         if st.button("➕ Initialiser un nouveau Descendant", type="primary", use_container_width=True, key="btn_init_global_desc"):
@@ -484,10 +469,9 @@ with tab_descendants:
         col_title_wizard.subheader("🛠️ Atelier de Configuration Synaptique" + (" (Nouveau Sujet)" if is_new else " (Modification)"))
         
         if col_close_wizard.button("❌ Annuler et fermer l'atelier", use_container_width=True):
-            # 1. Purge complète des variables de saisie de l'atelier
             cles_a_nettoyer = [
                 "w_nom", "w_cit", "w_emb1", "w_emb2", 
-                "w_ord1", "w_ord2", "w_ord3", "w_ord4",
+                "wiz_ord1", "wiz_ord2", "wiz_ord3", "wiz_ord4",
                 "w_trait1", "w_trait2", "w_entrave", "w_langues", 
                 "w_xp_level", "wiz_slot_comp1", "wiz_slot_comp2", "wiz_slot_comp3", 
                 "wiz_anc_select", f"init_done_{target}"
@@ -496,16 +480,13 @@ with tab_descendants:
                 if k in st.session_state:
                     del st.session_state[k]
             
-            # 2. Réinitialisation des états de l'atelier
             st.session_state.edit_target_id = None
             st.session_state.wizard_step = 1
             st.rerun()
 
-        # Jauge de progression calculée selon l'étape actuelle
         progression_map = {1: 0.33, 2: 0.66, 3: 1.0}
         st.progress(progression_map[st.session_state.wizard_step], text=f"Étape {st.session_state.wizard_step} / 3 en cours de traitement...")
 
-        # Chargement initial des données en Session State si modification
         if not is_new and target in data["descendants"]:
             ag_data = data["descendants"][target]
             if f"init_done_{target}" not in st.session_state:
@@ -518,8 +499,12 @@ with tab_descendants:
                 emb_data = ag_data["equipement_emblematique"]
                 st.session_state.w_emb1 = emb_data[0] if len(emb_data) > 0 else ""
                 st.session_state.w_emb2 = emb_data[1] if len(emb_data) > 1 else ""
+                
+                # CORRECTION DES CLÉS : Raccordement sur wiz_ordX au lieu de w_ordX
                 stds_data = [x.strip() for x in ag_data.get("equipement_standard", "").split(",") if x.strip()]
-                for i in range(4): st.session_state[f"w_ord{i+1}"] = stds_data[i] if i < len(stds_data) else ""
+                for i in range(4): 
+                    st.session_state[f"wiz_ord{i+1}"] = stds_data[i] if i < len(stds_data) else ""
+                    
                 st.session_state.tmp_act = ag_data["approches"]["action"]
                 st.session_state.tmp_disc = ag_data["approches"]["discretion"]
                 st.session_state.tmp_intel = ag_data["approches"]["intellect"]
@@ -527,7 +512,6 @@ with tab_descendants:
                 st.session_state.w_langues = ag_data.get("langues", "Français")
                 st.session_state.w_xp_level = ag_data.get("niveau_xp", 1)
                 
-                # Charger les compétences enregistrées
                 c_actives_old = ag_data.get("competences_actives", ["-- Emplacement Vide --", "-- Emplacement Vide --", "-- Emplacement Vide --"])
                 st.session_state.wiz_slot_comp1 = c_actives_old[0]
                 st.session_state.wiz_slot_comp2 = c_actives_old[1]
@@ -539,7 +523,6 @@ with tab_descendants:
         col_form_panel, col_preview_panel = st.columns([6, 6])
         
         with col_form_panel:
-            # --- ÉTAPE 1 : IDENTITÉ ---
             if step == 1:
                 st.markdown("#### 👤 Étape 1 : Identité & Philosophie")
                 w_nom = st.text_input("Nom de l'Agent *", value=st.session_state.get("w_nom", ""), key="input_wizard_nom")
@@ -548,7 +531,6 @@ with tab_descendants:
                 st.write("")
                 if st.button("➡️ Continuer vers les Approches", type="primary", use_container_width=True):
                     if w_nom.strip():
-                        # SAUVEGARDE EN MÉMOIRE PERSISTANTE
                         st.session_state.w_nom = w_nom.strip()
                         st.session_state.w_cit = w_cit.strip()
                         st.session_state.wizard_step = 2
@@ -556,7 +538,6 @@ with tab_descendants:
                     else:
                         st.error("❌ Le nom de l'agent est requis pour continuer.")
 
-            # --- ÉTAPE 2 : APPROCHES & MATÉRIEL ---
             elif step == 2:
                 st.markdown("#### 📊 Étape 2 : Approches & Équipement")
                 st.write("**💥 Distribution d'Effort Réglementaire**")
@@ -573,10 +554,12 @@ with tab_descendants:
                 st.write("**🎒 Equipement**")
                 w_emb1 = st.text_input("Objet Emblématique 1 ✦ *", value=st.session_state.get("w_emb1", ""), key="wiz_emb1")
                 w_emb2 = st.text_input("Objet Emblématique 2 ✦ *", value=st.session_state.get("w_emb2", ""), key="wiz_emb2")
-                w_ord1 = st.text_input("Matériel standard 1", value=st.session_state.get("w_ord1", ""), key="wiz_ord1")
-                w_ord2 = st.text_input("Matériel standard 2", value=st.session_state.get("w_ord2", ""), key="wiz_ord2")
-                w_ord3 = st.text_input("Matériel standard 3", value=st.session_state.get("w_ord3", ""), key="wiz_ord3")
-                w_ord4 = st.text_input("Matériel standard 4", value=st.session_state.get("w_ord4", ""), key="wiz_ord4")
+                
+                # CORRECTION DES CLÉS SÉCURISÉES POUR NE PLUS PERDRE L'ÉQUIPEMENT STANDARD
+                w_ord1 = st.text_input("Matériel standard 1", value=st.session_state.get("wiz_ord1", ""), key="wiz_ord1")
+                w_ord2 = st.text_input("Matériel standard 2", value=st.session_state.get("wiz_ord2", ""), key="wiz_ord2")
+                w_ord3 = st.text_input("Matériel standard 3", value=st.session_state.get("wiz_ord3", ""), key="wiz_ord3")
+                w_ord4 = st.text_input("Matériel standard 4", value=st.session_state.get("wiz_ord4", ""), key="wiz_ord4")
 
                 st.write("")
                 c_nav1, c_nav2 = st.columns(2)
@@ -588,8 +571,6 @@ with tab_descendants:
                         scores_attendus = sorted([int(x) for x in repart_cible.split(", ")])
                         scores_saisis = sorted([w_act, w_disc, w_intel, w_soc])
                         
-                        # MODIFICATION : Si c'est un nouveau perso, on valide la grille. 
-                        # Si c'est une édition, on laisse passer peu importe l'évolution des scores !
                         if is_new:
                             if scores_saisis == scores_attendus:
                                 st.session_state.w_emb1 = w_emb1.strip()
@@ -599,7 +580,6 @@ with tab_descendants:
                             else:
                                 st.error(f"❌ Déséquilibre d'effort initial : {scores_saisis}. Requis : {scores_attendus} pour un nouveau sujet.")
                         else:
-                            # Mode édition : On valide directement sans bloquer sur la grille de départ
                             st.session_state.w_emb1 = w_emb1.strip()
                             st.session_state.w_emb2 = w_emb2.strip()
                             st.session_state.wizard_step = 3
@@ -607,7 +587,6 @@ with tab_descendants:
                     else:
                         st.error("❌ Les deux objets emblématiques (✦) sont requis.")
 
-            # --- ÉTAPE 3 : TRAITS, SYNCHRONISATION & ATOUTS ---
             elif step == 3:
                 st.markdown("#### 🃏 Étape 3 : Traits, Synchronisation & Atouts")
                 w_trait1 = st.text_input("Trait 1 *", value=st.session_state.get("w_trait1", ""), key="wiz_t1")
@@ -627,19 +606,16 @@ with tab_descendants:
                     st.rerun()
                     
                 if c_nav4.button("🧬 COMPILER ET ENREGISTRER LE PROFIL", type="primary", use_container_width=True):
-                    # Récupération sécurisée depuis le Session State (Étapes 1 & 2)
                     f_nom = st.session_state.get("w_nom", "").strip()
                     f_cit = st.session_state.get("w_cit", "").strip()
                     f_emb1 = st.session_state.get("w_emb1", "").strip()
                     f_emb2 = st.session_state.get("w_emb2", "").strip()
                     
-                    # Récupération locale (Étape 3 - Gauche)
                     f_t1 = w_trait1.strip()
                     f_t2 = w_trait2.strip()
                     f_ent = w_entrave.strip()
                     f_lan = w_langues.strip()
                     
-                    # Récupération des compétences (Étape 3 - Droite via Session State)
                     c1_saved = st.session_state.get("wiz_slot_comp1", "-- Emplacement Vide --")
                     c2_saved = st.session_state.get("wiz_slot_comp2", "-- Emplacement Vide --")
                     c3_saved = st.session_state.get("wiz_slot_comp3", "-- Emplacement Vide --")
@@ -649,8 +625,13 @@ with tab_descendants:
                         import time
                         fid = target if not is_new else f"subject_{int(time.time())}"
                         
-                        # Reconstruction de l'inventaire standard
-                        o_list = [st.session_state.get("w_ord1", ""), st.session_state.get("w_ord2", ""), st.session_state.get("w_ord3", ""), st.session_state.get("w_ord4", "")]
+                        # CORRECTION DU PARSAGE DE SAUVEGARDE : Extraction depuis wiz_ordX
+                        o_list = [
+                            st.session_state.get("wiz_ord1", ""), 
+                            st.session_state.get("wiz_ord2", ""), 
+                            st.session_state.get("wiz_ord3", ""), 
+                            st.session_state.get("wiz_ord4", "")
+                        ]
                         string_stds = ", ".join([obj.strip() for obj in o_list if obj.strip()])
                         
                         data["descendants"][fid] = {
@@ -673,8 +654,7 @@ with tab_descendants:
                         }
                         sauvegarder_donnees(data)
                         
-                        # Nettoyage complet pour le prochain personnage
-                        for k in ["w_id", "w_nom", "w_cit", "w_emb1", "w_emb2", "w_ord1", "w_ord2", "w_ord3", "w_ord4", "w_trait1", "w_trait2", "w_traits", "w_entrave", "w_langues", "w_xp_level", "wiz_slot_comp1", "wiz_slot_comp2", "wiz_slot_comp3", "wiz_anc_select", f"init_done_{target}"]:
+                        for k in ["w_id", "w_nom", "w_cit", "w_emb1", "w_emb2", "wiz_ord1", "wiz_ord2", "wiz_ord3", "wiz_ord4", "w_trait1", "w_trait2", "w_traits", "w_entrave", "w_langues", "w_xp_level", "wiz_slot_comp1", "wiz_slot_comp2", "wiz_slot_comp3", "wiz_anc_select", f"init_done_{target}"]:
                             if k in st.session_state: del st.session_state[k]
                         st.session_state.edit_target_id = None
                         st.session_state.wizard_step = 1
@@ -683,19 +663,16 @@ with tab_descendants:
                         st.error("❌ Erreur : Veuillez remplir toutes les particularités requises (*) à l'étape 3.")
 
         with col_preview_panel:
-            # --- ÉTAPES 1 & 2 : APERÇU FIXE SELON LA SÉLECTION INITIALE ---
             if step in [1, 2]:
                 st.markdown("<b style='color:#385d6e;'>📜 LIAISON GÉNÉTIQUE : APERÇU DE L'ANCESTRE</b>", unsafe_allow_html=True)
                 ancetres_par_nom = {v["nom"]: v for v in data["ancetres_officiels"].values()}
                 
-                # Récupération sécurisée du nom de l'ancêtre en cours
                 default_anc = st.session_state.get("wiz_anc_select", list(ancetres_par_nom.keys())[0])
                 if default_anc not in ancetres_par_nom:
                     default_anc = list(ancetres_par_nom.keys())[0]
                     
                 p_a = ancetres_par_nom[default_anc]
                 
-                # CORRECTION : Utilisation de HTML_ANCESTRE_TEMPLATE à la place de HTML_CARD_TEMPLATE
                 st.markdown(HTML_ANCESTRE_TEMPLATE.format(
                     nom=p_a["nom"], 
                     periode=p_a.get("periode", "Inconnue"), 
@@ -710,8 +687,6 @@ with tab_descendants:
                     langues=p_a.get("langues", "Inconnu")
                 ), unsafe_allow_html=True)
             
-            # --- ÉTAPE 3 : CHOIX COMPLÈT DU COMPAGNON ET DES ATOUTS ---
-            # --- ÉTAPE 3 : CHOIX COMPLET DU COMPAGNON ET DES ATOUTS ---
             elif step == 3:
                 st.markdown("<b style='color:#385d6e;'>📜 CONFIGURATION DE LA MÉMOIRE GÉNÉTIQUE</b>", unsafe_allow_html=True)
                 ancetres_par_nom = {v["nom"]: v for v in data["ancetres_officiels"].values()}
@@ -723,10 +698,8 @@ with tab_descendants:
                 idx_anc_wiz = list(ancetres_par_nom.keys()).index(curr_anc_saved)
                 w_anc_lies = st.selectbox("Lier à l'ancêtre témoin :", list(ancetres_par_nom.keys()), index=idx_anc_wiz, key="wiz_anc_select")
 
-                # Affichage dynamique de l'ancêtre sélectionné à l'étape 3
                 p_a = ancetres_par_nom[w_anc_lies]
                 with st.expander("🔍 Visualiser la fiche de l'Ancêtre témoin sélectionné", expanded=True):
-                    # CORRECTION PROTOCOLE : Remplacement par HTML_ANCESTRE_TEMPLATE
                     st.markdown(HTML_ANCESTRE_TEMPLATE.format(
                         nom=p_a["nom"], 
                         periode=p_a.get("periode", "Inconnue"), 
@@ -794,12 +767,10 @@ with tab_descendants:
             inv_v = [x for x in emb_v if x]
             if std_v: inv_v.extend([x.strip() for x in std_v.split(",") if x.strip()])
             
-            # Récupération et formatage pour l'affichage unifié dans la vision
             ancetre_nom_v = profil_v.get("ancetre_prioritaire", "Aucun")
             comps_actives_v = profil_v.get("competences_actives", ["-- Emplacement Vide --", "-- Emplacement Vide --", "-- Emplacement Vide --"])
             atouts_presents_v = [c for c in comps_actives_v if c != "-- Emplacement Vide --" and c in data["competences_globales"]]
             
-            # Reconstruction des badges sans retour à la ligne
             html_badges_v = ""
             if atouts_presents_v:
                 for atout in atouts_presents_v:
@@ -808,7 +779,6 @@ with tab_descendants:
             else:
                 html_badges_v = '<span style="font-weight: normal; color: #777; font-style: italic;">Aucun atout mémorisé</span>'
 
-            # Utilisation du nouveau gabarit pour le descendant moderne
             st.markdown(HTML_DESCENDANT_TEMPLATE.format(
                 nom=profil_v["nom"], 
                 periode="Monde Moderne — Agent Cellule", 
@@ -826,29 +796,16 @@ with tab_descendants:
             ), unsafe_allow_html=True)
             
             st.write("")
-            # Au lieu de stocker la variable avant, on force l'exécution au chargement du bouton
-            st.download_button(
-                label="📥 EXPORTER LA FICHE OFFICIELLE (PNG)",
-                data=generer_fiche_personnage_png(profil_v, data),
-                file_name=f"Fiche_{profil_v['nom'].replace(' ', '_')}.png",
-                mime="image/png",
-                use_container_width=True,
-                type="primary",
-                key="btn_export_vision_unique"
-            )
-            
-            if bytes_vision:
-                st.download_button(
-                    label="📥 EXPORTER LA FICHE OFFICIELLE (PNG)",
-                    data=bytes_vision,
-                    file_name=f"Fiche_{profil_v['nom'].replace(' ', '_')}.png",
-                    mime="image/png",
-                    use_container_width=True,
-                    type="primary"
-                )
-            else:
-                st.error("⚠️ Fichier 'AC_Fiche de perso.jpg' introuvable à la racine pour l'export.")
-            
+            # MASQUAGE TEMPORAIRE DU BOUTON EN ATTENTE DE CALIBRAGE PILLOW REQUIS
+            # st.download_button(
+            #     label="📥 EXPORTER LA FICHE OFFICIELLE (PNG)",
+            #     data=generer_fiche_personnage_png(profil_v, data),
+            #     file_name=f"Fiche_{profil_v['nom'].replace(' ', '_')}.png",
+            #     mime="image/png",
+            #     use_container_width=True,
+            #     type="primary",
+            #     key="btn_export_vision_unique"
+            # )
             
         with v_col_milieu:
             st.markdown("<div style='text-align:center; font-weight:bold;'>📊 PALIER</div>", unsafe_allow_html=True)
@@ -858,7 +815,6 @@ with tab_descendants:
                 st.button(f"🧬 {label}" if xp_v >= p_id else f"⬜ {label}", key=f"v_xp_act_{p_id}", type="primary" if xp_v >= p_id else "secondary", use_container_width=True)
                     
         with v_col_droite:
-            # 1. Accordéon de la mémoire génétique de l'ancêtre
             anc_nom_lie = profil_v.get("ancetre_prioritaire", "")
             anc_dict = {v["nom"]: v for v in data["ancetres_officiels"].values()}
             if anc_nom_lie in anc_dict:
@@ -878,14 +834,12 @@ with tab_descendants:
                         langues=p_a.get("langues", "Inconnu")
                     ), unsafe_allow_html=True)
             
-            # 2. Accordéon unique regroupant TOUTES les compétences sélectionnées
             comps_v = profil_v.get("competences_actives", ["-- Emplacement Vide --", "-- Emplacement Vide --", "-- Emplacement Vide --"])
             atouts_presents_vision = [c for c in comps_v if c != "-- Emplacement Vide --" and c in data["competences_globales"]]
             
             with st.expander("🃏 Compétences", expanded=True):
                 if atouts_presents_vision:
                     for c_nom in atouts_presents_vision:
-                        # Toutes les cartes se génèrent ici, l'une sous l'autre, dans le même accordéon
                         st.markdown(HTML_SKILL_CARD_TEMPLATE.format(
                             titre=f"Atout : {c_nom}", 
                             description=data["competences_globales"][c_nom]
@@ -912,22 +866,18 @@ with tab_descendants:
                     inv_total = [x for x in emb if x]
                     if std_text: inv_total.extend([x.strip() for x in std_text.split(",") if x.strip()])
                     
-                    # Récupération de l'ancêtre et des compétences
                     ancetre_nom = profil.get("ancetre_prioritaire", "Aucun")
                     comps_actives = profil.get("competences_actives", ["-- Emplacement Vide --", "-- Emplacement Vide --", "-- Emplacement Vide --"])
                     atouts_presents = [c for c in comps_actives if c != "-- Emplacement Vide --"]
                     
-                    # Construction des badges de compétences sans aucun retour à la ligne pour éviter le bug Markdown
                     html_badges = ""
                     if atouts_presents:
                         for atout in atouts_presents:
                             eff = data["competences_globales"].get(atout, "")
-                            # TOUT SUR UNE SEULE LIGNE :
                             html_badges += f'<div style="background-color: #385d6e; color: white; border-radius: 4px; padding: 4px 8px; margin-top: 4px; font-size: 0.8rem; border-left: 3px solid #b13434;" title="{eff}">⚡ <b>{atout}</b></div>'
                     else:
                         html_badges = '<span style="font-weight: normal; color: #777; font-style: italic;">Aucun atout mémorisé</span>'
                     
-                    # Rendu final unifié sans coupure ni bloc de code noir
                     st.markdown(HTML_DESCENDANT_TEMPLATE.format(
                         nom=profil["nom"], 
                         periode=f"Monde Moderne — Niveau {profil.get('niveau_xp', 1)}/6", 
@@ -944,8 +894,8 @@ with tab_descendants:
                         competences_badges_html=html_badges
                     ), unsafe_allow_html=True)
                     
-                    # 4. Ligne de boutons d'action élargie pour accueillir l'export
-                    c_b1, c_b2, c_b3, c_b4 = st.columns([4, 3, 3, 2])
+                    # CORRECTION STRUCTURELLE DE LA GRILLE DE BOUTONS
+                    c_b1, c_b2, c_b3 = st.columns([5, 4, 3])
                     
                     if c_b1.button("👁️ Ouvrir", key=f"v_b_{cle_desc}", use_container_width=True, type="secondary"):
                         st.session_state.active_view_id = cle_desc
@@ -955,28 +905,26 @@ with tab_descendants:
                         st.session_state.edit_target_id = cle_desc
                         st.rerun()
 
-                    # Bouton d'export direct au format vignette
-                    bytes_vignette = generer_fiche_personnage_png(profil, data)
-                    if bytes_vignette:
-                        c_b3.download_button(
-                            label="💾",
-                            data=bytes_vignette,
-                            file_name=f"Fiche_{profil['nom'].replace(' ', '_')}.png",
-                            mime="image/png",
-                            key=f"exp_v_{cle_desc}",
-                            use_container_width=True,
-                            help="Exporter la fiche officielle en PNG"
-                        )
-                    else:
-                        c_b3.button("❌", key=f"exp_err_{cle_desc}", disabled=True, use_container_width=True, help="Fiche de base manquante")
+                    # MASQUAGE TEMPORAIRE DU BOUTON VIGNETTE 💾
+                    # bytes_vignette = generer_fiche_personnage_png(profil, data)
+                    # if bytes_vignette:
+                    #     c_b3.download_button(
+                    #         label="💾",
+                    #         data=bytes_vignette,
+                    #         file_name=f"Fiche_{profil['nom'].replace(' ', '_')}.png",
+                    #         mime="image/png",
+                    #         key=f"exp_v_{cle_desc}",
+                    #         use_container_width=True,
+                    #         help="Exporter la fiche officielle en PNG"
+                    #     )
                         
-                    if c_b4.button("🚨", key=f"d_b_{cle_desc}", use_container_width=True):
+                    if c_b3.button("🚨", key=f"d_b_{cle_desc}", use_container_width=True):
                         valider_suppression_donnees("descendant", cle_desc, profil["nom"])
         else:
             st.warning("⚠️ Aucun agent enregistré.")
 
 # ==========================================
-# 2. ONGLET : ARCHIVES DES ANCÊTRES (RECHERCHE + BOUTONS FILTRES)
+# 2. ONGLET : ARCHIVES DES ANCÊTRES
 # ==========================================
 with tab_ancetres:
     st.header("Mémoire Génétique (Fichiers de Témoin)")
@@ -1089,7 +1037,6 @@ with tab_ancetres:
                         st.success("Données mises à jour.")
                         st.rerun()
                         
-                # Sécurisation pop-up dialog
                 if st.button("❌ REJETER L'ANCÊTRE", key=f"del_anc_{choix_anc}", type="primary", use_container_width=True):
                     valider_suppression_donnees("ancetre", choix_anc, curr_anc["nom"])
 
@@ -1122,6 +1069,5 @@ with tab_competences:
                 st.success("Effets mis à jour.")
                 st.rerun()
                 
-        # Sécurisation pop-up dialog
         if st.button("❌ RETIRER LA CARTE", key=f"del_comp_{choix_comp}", type="primary", use_container_width=True):
             valider_suppression_donnees("competence", choix_comp, choix_comp)
