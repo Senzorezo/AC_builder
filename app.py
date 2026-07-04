@@ -106,14 +106,14 @@ def charger_donnees():
             "COURSE LIBRE": "Lorsque vous pratiquez la course libre, vous pouvez ajouter 1 correspondance à tout test d'Action lié. De plus, lorsque vous effectuez un test d'Action, vous pouvez utiliser 2 Discrétion pour disparaître du champ de vision de vos adversaires.",
             "CRAN": "Lorsque vous effectuez un test d'Intellect, vous pouvez considérer jusqu'à 1 Action comme une correspondance supplémentaire.",
             "DÉPLACEMENTS STRATÉGIQUES": "Lorsque vous effectuez un test d'Action, vous pouvez considérer jusqu'à 1 Intellect comme 1 correspondance supplémentaire.",
-            "FORMATION DE LA CONFRÉRIE": "Lorsque vous utilisez une arme secrète, vous pouvez considérer 1 Credo comme 1 correspondance supplémentaire. Ceci en plus de toute correspondance accordée par l'activation d'un équipement emblématique (arme secrète).",
+            "FORMATION DE LA CONFRÉRIE": "Lorsque vous utilisez une arme secrète, vous pouvez considérer 1 Credo comme 1 correspondance supplémentaire. Ceci en plus de toute correspondance accordée by l'activation d'un équipement emblématique (arme secrète).",
             "HYPNOSE": "Lorsque vous effectuez un test Social, vous pouvez considérer jusqu'à 1 Discrétion comme une correspondance supplémentaire.",
             "MOUVEMENTS TROMPEURS": "Lorsque vous effectuez un test d'Action lors d'une situation où vous faites appel à vos capacités de tromperie, vous pouvez considérer jusqu'à 2 Social comme 1 correspondance supplémentaire chacun.",
             "OBSERVATEUR": "Lorsque vous effectuez un test d'Intellect dans une situation où vous faites appel à vos capacités d'investigation, vous pouvez considérer jusqu'à 2 Discrétion comme une correspondance supplémentaire.",
             "PASSE-PASSE": "Lorsque vous essayez de dissimuler un petit objet ou d'en dérober un, vous pouvez ajouter 1 correspondance à tout test de Discrétion lié. En outre, lorsque vous effectuez un test d'Action ou Social, vous pouvez utiliser 2 Discrétion pour dérober un petit objet à une personne impliquée dans la scène.",
             "PRESSION": "Lorsque vous effectuez un test Social lors d'une situation où vous faites appel à vos capacités d'intimidation, vous pouvez considérer jusqu'à 2 Action comme 1 correspondance supplémentaire chacun.",
             "RUSE": "Lorsque vous effectuez un test d'Intellect durant une activité de bricolage, vous bénéficiez de 1 majoration gratuite.",
-            "SAPEUR": "Lorsque vous tentez de saboter un appareil, vous pouvez ajouter 1 correspondance à tout test d'Intellect lié. De plus, lorsque vous effectuez un test d'Action ou de Discrétion, vous pouvez utiliser 2 Intellect pour créer un leurre ou une diversion durant la scène.",
+            "SAPEUR": "Lorsque vous tentez de sabotez un appareil, vous pouvez ajouter 1 correspondance à tout test d'Intellect lié. De plus, lorsque vous effectuez un test d'Action ou de Discrétion, vous pouvez utiliser 2 Intellect pour créer un leurre ou une diversion durant la scène.",
             "SE CACHER AU GRAND JOUR": "Lorsque vous effectuez un test de Discrétion, vous pouvez considérer jusqu'à 1 Social comme une correspondance supplémentaire.",
             "SENS D'AIGLE": "Le Sens d'aigle affine vos sens au point de pouvoir percevoir les battements de cœur de votre cible dans la zone ou même prévoir sa prochaine action. De plus, vous pouvez entrapercevoir les souvenirs de vos cibles lorsque vous les tuez, obtenant ainsi toutes les informations qu'elles ont à offrir.",
             "VISION D'AIGLE": "La Vision d'aigle est une forme de perception extrasensorielle, ou « sixième sens », et l'un des dons de vos gènes Isu. Vous pouvez aisément repérer les alliés, ennemis, objectifs, sources d'informations et cibles à courte portée. En outre, lorsque vous effectuez un test d'Approche, vous pouvez considérer 1 Intellect comme 1 correspondance supplémentaire."
@@ -254,7 +254,7 @@ def charger_donnees():
             },
             "akira": {
                 "nom": "Akira", "periode": "Sengoku-Jidai",
-                "citation": "Je mourrai par le sabre. Le mien ou celui de mon ennemi.",
+                "citation": "Je mourrai by le sabre. Le mien ou celui de mon ennemi.",
                 "action": 1, "discretion": 3, "intellect": 2, "social": 2,
                 "traits": "Résistance, Honneur", "entrave": "Inflexible", "langues": "Japonais",
                 "equipement": "Sabre familial, Arc yumi, Armure de samouraï, Éventail pliable, Wakizashi, Gourde en bambou"
@@ -500,7 +500,7 @@ with tab_descendants:
                 st.session_state.w_emb1 = emb_data[0] if len(emb_data) > 0 else ""
                 st.session_state.w_emb2 = emb_data[1] if len(emb_data) > 1 else ""
                 
-                # CORRECTION DES CLÉS : Raccordement sur wiz_ordX au lieu de w_ordX
+                # RECALIBRAGE DES VALEURS PAR DÉFAUT DE L'ÉQUIPEMENT STANDARD DANS LA SESSION
                 stds_data = [x.strip() for x in ag_data.get("equipement_standard", "").split(",") if x.strip()]
                 for i in range(4): 
                     st.session_state[f"wiz_ord{i+1}"] = stds_data[i] if i < len(stds_data) else ""
@@ -555,7 +555,7 @@ with tab_descendants:
                 w_emb1 = st.text_input("Objet Emblématique 1 ✦ *", value=st.session_state.get("w_emb1", ""), key="wiz_emb1")
                 w_emb2 = st.text_input("Objet Emblématique 2 ✦ *", value=st.session_state.get("w_emb2", ""), key="wiz_emb2")
                 
-                # CORRECTION DES CLÉS SÉCURISÉES POUR NE PLUS PERDRE L'ÉQUIPEMENT STANDARD
+                # FORMULAIRES LIÉS DIRECTEMENT SUR LES ENTRÉES WIZ_ORD POUR NE RIEN MANQUER AU TRAITEMENT
                 w_ord1 = st.text_input("Matériel standard 1", value=st.session_state.get("wiz_ord1", ""), key="wiz_ord1")
                 w_ord2 = st.text_input("Matériel standard 2", value=st.session_state.get("wiz_ord2", ""), key="wiz_ord2")
                 w_ord3 = st.text_input("Matériel standard 3", value=st.session_state.get("wiz_ord3", ""), key="wiz_ord3")
@@ -571,17 +571,21 @@ with tab_descendants:
                         scores_attendus = sorted([int(x) for x in repart_cible.split(", ")])
                         scores_saisis = sorted([w_act, w_disc, w_intel, w_soc])
                         
+                        # --- CAPTURE CHIRURGICALE AVANT LA DISPARITION DES CHAMPS ---
+                        st.session_state.save_ord1 = w_ord1.strip()
+                        st.session_state.save_ord2 = w_ord2.strip()
+                        st.session_state.save_ord3 = w_ord3.strip()
+                        st.session_state.save_ord4 = w_ord4.strip()
+                        st.session_state.w_emb1 = w_emb1.strip()
+                        st.session_state.w_emb2 = w_emb2.strip()
+                        
                         if is_new:
                             if scores_saisis == scores_attendus:
-                                st.session_state.w_emb1 = w_emb1.strip()
-                                st.session_state.w_emb2 = w_emb2.strip()
                                 st.session_state.wizard_step = 3
                                 st.rerun()
                             else:
                                 st.error(f"❌ Déséquilibre d'effort initial : {scores_saisis}. Requis : {scores_attendus} pour un nouveau sujet.")
                         else:
-                            st.session_state.w_emb1 = w_emb1.strip()
-                            st.session_state.w_emb2 = w_emb2.strip()
                             st.session_state.wizard_step = 3
                             st.rerun()
                     else:
@@ -625,12 +629,12 @@ with tab_descendants:
                         import time
                         fid = target if not is_new else f"subject_{int(time.time())}"
                         
-                        # CORRECTION DU PARSAGE DE SAUVEGARDE : Extraction depuis wiz_ordX
+                        # Extraction depuis le coffre-fort persistant
                         o_list = [
-                            st.session_state.get("wiz_ord1", ""), 
-                            st.session_state.get("wiz_ord2", ""), 
-                            st.session_state.get("wiz_ord3", ""), 
-                            st.session_state.get("wiz_ord4", "")
+                            st.session_state.get("save_ord1", ""),
+                            st.session_state.get("save_ord2", ""),
+                            st.session_state.get("save_ord3", ""),
+                            st.session_state.get("save_ord4", "")
                         ]
                         string_stds = ", ".join([obj.strip() for obj in o_list if obj.strip()])
                         
@@ -796,7 +800,7 @@ with tab_descendants:
             ), unsafe_allow_html=True)
             
             st.write("")
-            # MASQUAGE TEMPORAIRE DU BOUTON EN ATTENTE DE CALIBRAGE PILLOW REQUIS
+            # BOUTON PNG DU MODE VISION MASQUÉ TEMPORAIREMENT POUR LE CHANTIER DE RECALIBRAGE
             # st.download_button(
             #     label="📥 EXPORTER LA FICHE OFFICIELLE (PNG)",
             #     data=generer_fiche_personnage_png(profil_v, data),
@@ -894,7 +898,7 @@ with tab_descendants:
                         competences_badges_html=html_badges
                     ), unsafe_allow_html=True)
                     
-                    # CORRECTION STRUCTURELLE DE LA GRILLE DE BOUTONS
+                    # RETOUR À LA STRUCTURE INITIALE EN 3 COLONNES SANS LE BOUTON D'EXPORT FLOU
                     c_b1, c_b2, c_b3 = st.columns([5, 4, 3])
                     
                     if c_b1.button("👁️ Ouvrir", key=f"v_b_{cle_desc}", use_container_width=True, type="secondary"):
@@ -905,18 +909,7 @@ with tab_descendants:
                         st.session_state.edit_target_id = cle_desc
                         st.rerun()
 
-                    # MASQUAGE TEMPORAIRE DU BOUTON VIGNETTE 💾
-                    # bytes_vignette = generer_fiche_personnage_png(profil, data)
-                    # if bytes_vignette:
-                    #     c_b3.download_button(
-                    #         label="💾",
-                    #         data=bytes_vignette,
-                    #         file_name=f"Fiche_{profil['nom'].replace(' ', '_')}.png",
-                    #         mime="image/png",
-                    #         key=f"exp_v_{cle_desc}",
-                    #         use_container_width=True,
-                    #         help="Exporter la fiche officielle en PNG"
-                    #     )
+                    # LE BOUTON VIGNETTE FLOU EST ENTIÈREMENT NETTOYÉ D'ICI
                         
                     if c_b3.button("🚨", key=f"d_b_{cle_desc}", use_container_width=True):
                         valider_suppression_donnees("descendant", cle_desc, profil["nom"])
