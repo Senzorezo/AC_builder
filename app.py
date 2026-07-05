@@ -92,6 +92,28 @@ def generer_fiche_personnage_png(profil, data_globales):
 # --- LOGIQUE DE GESTION DES DONNÉES ---
 DB_FILE = "cellule_data.json"
 
+def mettre_a_niveau_profil(cle_desc, profil):
+    """Injecte les structures manquantes dans un ancien profil pour le rendre compatible."""
+    MODIFIE = False
+    if "equipement_standard" not in profil:
+        profil["equipement_standard"] = ""
+        MODIFIE = True
+    if "competences_actives" not in profil:
+        profil["competences_actives"] = ["-- Emplacement Vide --", "-- Emplacement Vide --", "-- Emplacement Vide --"]
+        MODIFIE = True
+    elif len(profil["competences_actives"]) < 3:
+        while len(profil["competences_actives"]) < 3:
+            profil["competences_actives"].append("-- Emplacement Vide --")
+        MODIFIE = True
+    if "niveau_xp" not in profil:
+        profil["niveau_xp"] = 1
+        MODIFIE = True
+    if MODIFIE:
+        data["descendants"][cle_desc] = profil
+        sauvegarder_donnees(data)
+        return True
+    return False
+
 def charger_donnees():
     base_default = {
         "descendants": {},
@@ -254,7 +276,7 @@ def charger_donnees():
             },
             "akira": {
                 "nom": "Akira", "periode": "Sengoku-Jidai",
-                "citation": "Je mourrai by le sabre. Le mien ou celui de mon ennemi.",
+                "citation": "Je mourrai by le sabre. Le mien ou celui de mon enemy.",
                 "action": 1, "discretion": 3, "intellect": 2, "social": 2,
                 "traits": "Résistance, Honneur", "entrave": "Inflexible", "langues": "Japonais",
                 "equipement": "Sabre familial, Arc yumi, Armure de samouraï, Éventail pliable, Wakizashi, Gourde en bambou"
@@ -451,13 +473,66 @@ with tab_descendants:
     if "active_view_id" not in st.session_state: st.session_state.active_view_id = None
     if "wizard_step" not in st.session_state: st.session_state.wizard_step = 1
 
-    col_tools_1, col_tools_2 = st.columns([7, 3])
-    with col_tools_2:
-        if st.button("➕ Initialiser un nouveau Descendant", type="primary", use_container_width=True, key="btn_init_global_desc"):
+    # =========================================================================
+    # 🗃️ PROTOCOLE D'IMPORTATION DES DONNÉES SYNAPTIQUES (POP-UP DIALOG)
+    # =========================================================================
+    @st.dialog("📥 IMPORTER UN AGENT AU FORMAT JSON")
+    def protocole_importation_solo():
+        st.write("Sélectionnez le fichier technique `.json` de l'agent à transférer dans l'Animus.")
+        
+        fichier_solo = st.file_uploader(
+            "Fichier JSON de l'Agent", 
+            type=["json"], 
+            key="dialog_upload_solo", 
+            label_visibility="collapsed"
+        )
+        
+        if fichier_solo is not None:
+            if st.button("🔥 LANCER LA SYNCHRONISATION", type="primary", use_container_width=True):
+                with st.spinner("🧬 Alignement des séquences génétiques en cours..."):
+                    import time
+                    time.sleep(1.2)
+                    
+                    try:
+                        solo_data = json.load(fichier_solo)
+                        if isinstance(solo_data, dict) and "nom" in solo_data:
+                            cle_technique = f"subject_{solo_data['nom'].lower().replace(' ', '_')}"
+                            data["descendants"][cle_technique] = solo_data
+                            sauvegarder_donnees(data)
+                            
+                            st.success(f"✅ SÉQUENCE ENREGISTRÉE : {solo_data['nom']} est opérationnel !")
+                            st.info("🔄 Rechargement de la Matrice Animus...")
+                            time.sleep(1.0)
+                            st.rerun()
+                        else:
+                            st.error("❌ ÉCHEC : Le fichier ne contient pas une structure d'agent valide.")
+                    except Exception as e:
+                        st.error(f"❌ ERREUR DE LECTURE : Fichier corrompu ou illisible ({str(e)}).")
+
+    # =========================================================================
+    # 🗃️ BARRE D'OUTILS ET ENTRÉES SYSTÈME (INTERFACE RÉALIGNÉE)
+    # =========================================================================
+    # Ligne 1 : Les actions principales alignées côte à côte
+    col_actions_1, col_actions_2, col_vides = st.columns([4, 4, 4])
+    
+    with col_actions_1:
+        if st.button("➕ Créer un nouveau descendant", type="primary", use_container_width=True, key="btn_init_wizard_desc"):
             st.session_state.edit_target_id = "NOUVEAU"
             st.rerun()
-    with col_tools_1:
-        recherche_desc = st.text_input("🔍 Rechercher un agent par son identité...", "", key="search_bar_desc").strip().lower()
+            
+    with col_actions_2:
+        if st.button("📥 Importer agent au format JSON", use_container_width=True, key="btn_trigger_import_dialog"):
+            protocole_importation_solo()
+
+    # Espacement visuel discret entre les boutons et la recherche
+    st.write("") 
+
+    # Ligne 2 : La recherche prend une place propre en dessous
+    recherche_desc = st.text_input(
+        "🔍 Rechercher un agent par son identité...", 
+        "", 
+        key="search_bar_desc"
+    ).strip().lower()
 
     # --- ATELIER DE TRAVAIL UNIQUE PLEIN ÉCRAN (WIZARD PAR ÉTAPES) ---
     if st.session_state.edit_target_id:
@@ -500,7 +575,6 @@ with tab_descendants:
                 st.session_state.w_emb1 = emb_data[0] if len(emb_data) > 0 else ""
                 st.session_state.w_emb2 = emb_data[1] if len(emb_data) > 1 else ""
                 
-                # RECALIBRAGE DES VALEURS PAR DÉFAUT DE L'ÉQUIPEMENT STANDARD DANS LA SESSION
                 stds_data = [x.strip() for x in ag_data.get("equipement_standard", "").split(",") if x.strip()]
                 for i in range(4): 
                     st.session_state[f"wiz_ord{i+1}"] = stds_data[i] if i < len(stds_data) else ""
@@ -555,7 +629,6 @@ with tab_descendants:
                 w_emb1 = st.text_input("Objet Emblématique 1 ✦ *", value=st.session_state.get("w_emb1", ""), key="wiz_emb1")
                 w_emb2 = st.text_input("Objet Emblématique 2 ✦ *", value=st.session_state.get("w_emb2", ""), key="wiz_emb2")
                 
-                # FORMULAIRES LIÉS DIRECTEMENT SUR LES ENTRÉES WIZ_ORD POUR NE RIEN MANQUER AU TRAITEMENT
                 w_ord1 = st.text_input("Matériel standard 1", value=st.session_state.get("wiz_ord1", ""), key="wiz_ord1")
                 w_ord2 = st.text_input("Matériel standard 2", value=st.session_state.get("wiz_ord2", ""), key="wiz_ord2")
                 w_ord3 = st.text_input("Matériel standard 3", value=st.session_state.get("wiz_ord3", ""), key="wiz_ord3")
@@ -800,16 +873,6 @@ with tab_descendants:
             ), unsafe_allow_html=True)
             
             st.write("")
-            # BOUTON PNG DU MODE VISION MASQUÉ TEMPORAIREMENT POUR LE CHANTIER DE RECALIBRAGE
-            # st.download_button(
-            #     label="📥 EXPORTER LA FICHE OFFICIELLE (PNG)",
-            #     data=generer_fiche_personnage_png(profil_v, data),
-            #     file_name=f"Fiche_{profil_v['nom'].replace(' ', '_')}.png",
-            #     mime="image/png",
-            #     use_container_width=True,
-            #     type="primary",
-            #     key="btn_export_vision_unique"
-            # )
             
         with v_col_milieu:
             st.markdown("<div style='text-align:center; font-weight:bold;'>📊 PALIER</div>", unsafe_allow_html=True)
@@ -865,6 +928,19 @@ with tab_descendants:
             grid_cols = st.columns(3)
             for idx, (cle_desc, profil) in enumerate(desc_tries):
                 with grid_cols[idx % 3]:
+
+                    # --- CHECK DE COMPATIBILITÉ DES ANCIENS PERSONNAGES ---
+                    champs_requis = ["equipement_standard", "competences_actives", "niveau_xp"]
+                    est_obsolete = any(champ not in profil for champ in champs_requis)
+                    
+                    if est_obsolete:
+                        st.error(f"⚠️ **PROFIL OBSOLÈTE : {profil['nom']}**")
+                        st.caption("Ce descendant a été créé avec une ancienne version de l'application.")
+                        if st.button(f"🧬 Synchroniser l'ADN de {profil['nom']}", key=f"fix_{cle_desc}", type="primary", use_container_width=True):
+                            if mettre_a_niveau_profil(cle_desc, profil):
+                                st.success("Séquence génétique réparée !")
+                                st.rerun()
+
                     emb = profil.get("equipement_emblematique", ["", ""])
                     std_text = profil.get("equipement_standard", "")
                     inv_total = [x for x in emb if x]
@@ -898,20 +974,30 @@ with tab_descendants:
                         competences_badges_html=html_badges
                     ), unsafe_allow_html=True)
                     
-                    # RETOUR À LA STRUCTURE INITIALE EN 3 COLONNES SANS LE BOUTON D'EXPORT FLOU
-                    c_b1, c_b2, c_b3 = st.columns([5, 4, 3])
+                    # Grille de boutons rééquilibrée à 4 colonnes pour accueillir l'export JSON individuel
+                    c_b1, c_b2, c_b3, c_b4 = st.columns([4, 3, 3, 2])
                     
-                    if c_b1.button("👁️ Ouvrir", key=f"v_b_{cle_desc}", use_container_width=True, type="secondary"):
+                    if c_b1.button("👁️ Ouvrir", key=f"v_b_{cle_desc}", use_container_width=True, type="secondary", disabled=est_obsolete):
                         st.session_state.active_view_id = cle_desc
                         st.rerun()
                         
-                    if c_b2.button("📝 Éditer", key=f"e_b_{cle_desc}", use_container_width=True):
+                    if c_b2.button("📝 Éditer", key=f"e_b_{cle_desc}", use_container_width=True, disabled=est_obsolete):
                         st.session_state.edit_target_id = cle_desc
                         st.rerun()
 
-                    # LE BOUTON VIGNETTE FLOU EST ENTIÈREMENT NETTOYÉ D'ICI
+                    # Bouton d'export JSON pour CE personnage uniquement
+                    json_solo_string = json.dumps(profil, indent=4, ensure_ascii=False)
+                    c_b3.download_button(
+                        label="📥",
+                        data=json_solo_string,
+                        file_name=f"Agent_{profil['nom'].replace(' ', '_')}.json",
+                        mime="application/json",
+                        key=f"exp_json_{cle_desc}",
+                        use_container_width=True,
+                        help=f"Exporter la sauvegarde JSON de {profil['nom']}"
+                    )
                         
-                    if c_b3.button("🚨", key=f"d_b_{cle_desc}", use_container_width=True):
+                    if c_b4.button("🚨", key=f"d_b_{cle_desc}", use_container_width=True):
                         valider_suppression_donnees("descendant", cle_desc, profil["nom"])
         else:
             st.warning("⚠️ Aucun agent enregistré.")
