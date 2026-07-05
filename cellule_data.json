@@ -1,77 +1,27 @@
 {
     "descendants": {
-        "subject_1783170266": {
-            "nom": "Lucas SINCLAIR",
-            "citation": "Bof",
-            "entrave": "Curieux",
-            "traits": "Endurant, Fort",
+        "subject_1783250829": {
+            "nom": "Lola",
+            "citation": "Ca ne me fait pas plaisir de tuer. Mais la vie n'a jamais été une partie de plaisir",
+            "entrave": "Sans émotions",
+            "traits": "Méticuleux, Observatrice",
             "equipement_emblematique": [
                 "Couteau",
                 "Fusil"
             ],
-            "equipement_standard": "Moto, Téléphone, Lunerttes",
-            "approches": {
-                "action": 1,
-                "discretion": 3,
-                "intellect": 1,
-                "social": 3
-            },
-            "langues": "Anglais, Espgnol",
-            "ancetre_prioritaire": "Kassandra",
-            "niveau_xp": 3,
-            "competences_actives": [
-                "CHARME",
-                "-- Emplacement Vide --",
-                "-- Emplacement Vide --"
-            ]
-        },
-        "subject_1783186851": {
-            "nom": "Roberto Vagas",
-            "citation": "Ola Ombre.",
-            "entrave": "Réfléchis peu",
-            "traits": "Courageaux, Roublard",
-            "equipement_emblematique": [
-                "Couteau",
-                "Pistolet"
-            ],
-            "equipement_standard": "",
+            "equipement_standard": "Téléphone, Casque audio, Moto, Casque de moto hello kitty",
             "approches": {
                 "action": 2,
                 "discretion": 3,
                 "intellect": 3,
                 "social": 2
             },
-            "langues": "Espagnol, Anglais",
-            "ancetre_prioritaire": "Reboante",
+            "langues": "Français",
+            "ancetre_prioritaire": "",
             "niveau_xp": 1,
             "competences_actives": [
-                "CHARME",
+                "ASSASSINAT",
                 "-- Emplacement Vide --",
-                "-- Emplacement Vide --"
-            ]
-        },
-        "subject_aude": {
-            "nom": "Aude",
-            "citation": "Dansons",
-            "entrave": "truc",
-            "traits": "Chanteause, blbla",
-            "equipement_emblematique": [
-                "Flute",
-                "Couteau"
-            ],
-            "equipement_standard": "sdsqlklsdfsfh, fdsjkhdsjkh, fdksjhjdsfh, fdskjfhskjsfhksdfdqsdqsd",
-            "approches": {
-                "action": 3,
-                "discretion": 3,
-                "intellect": 2,
-                "social": 2
-            },
-            "langues": "Français",
-            "ancetre_prioritaire": "Venator",
-            "niveau_xp": 4,
-            "competences_actives": [
-                "COMBATTANT NÉ",
-                "COMPAGNON ANIMAL",
                 "-- Emplacement Vide --"
             ]
         }

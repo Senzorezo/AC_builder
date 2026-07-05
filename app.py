@@ -602,11 +602,22 @@ with tab_descendants:
                 w_nom = st.text_input("Nom de l'Agent *", value=st.session_state.get("w_nom", ""), key="input_wizard_nom")
                 w_cit = st.text_input("Citation / Devise Fondamentale", value=st.session_state.get("w_cit", ""), key="input_wizard_cit")
                 
+                st.write("---")
+                st.markdown("##### 📜 Liaison Génétique Initiale")
+                ancetres_par_nom = {v["nom"]: v for v in data["ancetres_officiels"].values()}
+                curr_anc_saved = st.session_state.get("wiz_anc_select", list(ancetres_par_nom.keys())[0])
+                if curr_anc_saved not in ancetres_par_nom:
+                    curr_anc_saved = list(ancetres_par_nom.keys())[0]
+                    
+                idx_anc_wiz = list(ancetres_par_nom.keys()).index(curr_anc_saved)
+                w_anc_lies = st.selectbox("Lier à l'ancêtre témoin :", list(ancetres_par_nom.keys()), index=idx_anc_wiz, key="wiz_anc_select")
+                
                 st.write("")
                 if st.button("➡️ Continuer vers les Approches", type="primary", use_container_width=True):
                     if w_nom.strip():
                         st.session_state.w_nom = w_nom.strip()
                         st.session_state.w_cit = w_cit.strip()
+                        # Plus besoin d'assigner l'ancêtre, le selectbox l'a déjà fait tout seul grâce à sa 'key' !
                         st.session_state.wizard_step = 2
                         st.rerun()
                     else:
@@ -644,7 +655,6 @@ with tab_descendants:
                         scores_attendus = sorted([int(x) for x in repart_cible.split(", ")])
                         scores_saisis = sorted([w_act, w_disc, w_intel, w_soc])
                         
-                        # --- CAPTURE CHIRURGICALE AVANT LA DISPARITION DES CHAMPS ---
                         st.session_state.save_ord1 = w_ord1.strip()
                         st.session_state.save_ord2 = w_ord2.strip()
                         st.session_state.save_ord3 = w_ord3.strip()
@@ -702,7 +712,6 @@ with tab_descendants:
                         import time
                         fid = target if not is_new else f"subject_{int(time.time())}"
                         
-                        # Extraction depuis le coffre-fort persistant
                         o_list = [
                             st.session_state.get("save_ord1", ""),
                             st.session_state.get("save_ord2", ""),
@@ -742,41 +751,17 @@ with tab_descendants:
         with col_preview_panel:
             if step in [1, 2]:
                 st.markdown("<b style='color:#385d6e;'>📜 LIAISON GÉNÉTIQUE : APERÇU DE L'ANCESTRE</b>", unsafe_allow_html=True)
+                
+                # On récupère l'ancêtre sélectionné en direct dans le widget de session
                 ancetres_par_nom = {v["nom"]: v for v in data["ancetres_officiels"].values()}
+                curr_anc = st.session_state.get("wiz_anc_select")
                 
-                default_anc = st.session_state.get("wiz_anc_select", list(ancetres_par_nom.keys())[0])
-                if default_anc not in ancetres_par_nom:
-                    default_anc = list(ancetres_par_nom.keys())[0]
+                # Si aucun n'est en session (premier lancement), on prend le premier de la liste
+                if not curr_anc:
+                    curr_anc = list(ancetres_par_nom.keys())[0]
                     
-                p_a = ancetres_par_nom[default_anc]
-                
-                st.markdown(HTML_ANCESTRE_TEMPLATE.format(
-                    nom=p_a["nom"], 
-                    periode=p_a.get("periode", "Inconnue"), 
-                    citation=p_a["citation"], 
-                    action=p_a["action"], 
-                    discretion=p_a["discretion"], 
-                    intellect=p_a["intellect"], 
-                    social=p_a["social"], 
-                    equipement_html=formater_equipement_html(p_a["equipement"]), 
-                    traits=p_a["traits"], 
-                    entrave=p_a["entrave"], 
-                    langues=p_a.get("langues", "Inconnu")
-                ), unsafe_allow_html=True)
-            
-            elif step == 3:
-                st.markdown("<b style='color:#385d6e;'>📜 CONFIGURATION DE LA MÉMOIRE GÉNÉTIQUE</b>", unsafe_allow_html=True)
-                ancetres_par_nom = {v["nom"]: v for v in data["ancetres_officiels"].values()}
-                
-                curr_anc_saved = st.session_state.get("wiz_anc_select", list(ancetres_par_nom.keys())[0])
-                if curr_anc_saved not in ancetres_par_nom:
-                    curr_anc_saved = list(ancetres_par_nom.keys())[0]
-                    
-                idx_anc_wiz = list(ancetres_par_nom.keys()).index(curr_anc_saved)
-                w_anc_lies = st.selectbox("Lier à l'ancêtre témoin :", list(ancetres_par_nom.keys()), index=idx_anc_wiz, key="wiz_anc_select")
-
-                p_a = ancetres_par_nom[w_anc_lies]
-                with st.expander("🔍 Visualiser la fiche de l'Ancêtre témoin sélectionné", expanded=True):
+                if curr_anc in ancetres_par_nom:
+                    p_a = ancetres_par_nom[curr_anc]
                     st.markdown(HTML_ANCESTRE_TEMPLATE.format(
                         nom=p_a["nom"], 
                         periode=p_a.get("periode", "Inconnue"), 
@@ -790,6 +775,30 @@ with tab_descendants:
                         entrave=p_a["entrave"], 
                         langues=p_a.get("langues", "Inconnu")
                     ), unsafe_allow_html=True)
+            
+            elif step == 3:
+                st.markdown("<b style='color:#385d6e;'>📜 CONFIGURATION DE LA MÉMOIRE GÉNÉTIQUE</b>", unsafe_allow_html=True)
+                # On laisse l'expandeur informatif à l'étape 3, mais sans le selectbox doublon qui a migré à l'étape 1
+                ancetres_par_nom = {v["nom"]: v for v in data["ancetres_officiels"].values()}
+                curr_anc_saved = st.session_state.get("wiz_anc_select", list(ancetres_par_nom.keys())[0])
+                
+                if curr_anc_saved in ancetres_par_nom:
+                    p_a = ancetres_par_nom[curr_anc_saved]
+                    with st.expander(f"🔍 Rappel de la fiche de l'Ancêtre ({p_a['nom']})", expanded=False):
+                        st.markdown(HTML_ANCESTRE_TEMPLATE.format(
+                            nom=p_a["nom"], 
+                            periode=p_a.get("periode", "Inconnue"), 
+                            citation=p_a["citation"], 
+                            action=p_a["action"], 
+                            discretion=p_a["discretion"], 
+                            intellect=p_a["intellect"], 
+                            social=p_a["social"], 
+                            equipement_html=formater_equipement_html(p_a["equipement"]), 
+                            traits=p_a["traits"], 
+                            entrave=p_a["entrave"], 
+                            langues=p_a.get("langues", "Inconnu")
+                        ), unsafe_allow_html=True)
+
 
                 st.write("---")
                 st.markdown("<b style='color:#385d6e;'>🎴 SÉLECTION ET SYNC DES SKILLS DE L'ANIMUM</b>", unsafe_allow_html=True)
@@ -805,7 +814,11 @@ with tab_descendants:
                     st.markdown(HTML_SKILL_CARD_TEMPLATE.format(titre=w_c1, description=data['competences_globales'][w_c1]), unsafe_allow_html=True)
                 
                 # Slot 2
-                if st.session_state.w_xp_level >= 3:
+                # Récupération sécurisée du niveau d'XP actuel
+                niveau_xp_actuel = st.session_state.get("w_xp_level", 1)
+
+                # Slot 2
+                if niveau_xp_actuel >= 3:
                     f2 = ["-- Emplacement Vide --"] + [c for c in base_comps_all if c not in [w_c1, v_c3]]
                     w_c2 = st.selectbox("Slot Atout 2 (Débloqué au Palier 55%+)", f2, index=f2.index(v_c2) if v_c2 in f2 else 0, key="wiz_slot_comp2")
                     if w_c2 != "-- Emplacement Vide --":
@@ -815,7 +828,7 @@ with tab_descendants:
                     st.session_state.wiz_slot_comp2 = "-- Emplacement Vide --"
                     
                 # Slot 3
-                if st.session_state.w_xp_level >= 5:
+                if niveau_xp_actuel >= 5:
                     f3 = ["-- Emplacement Vide --"] + [c for c in base_comps_all if c not in [w_c1, st.session_state.get("wiz_slot_comp2", "-- Emplacement Vide --")]]
                     w_c3 = st.selectbox("Slot Atout 3 (Débloqué au Palier 85%+)", f3, index=f3.index(v_c3) if v_c3 in f3 else 0, key="wiz_slot_comp3")
                     if w_c3 != "-- Emplacement Vide --":
