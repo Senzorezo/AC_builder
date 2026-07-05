@@ -24,6 +24,31 @@
                 "-- Emplacement Vide --",
                 "-- Emplacement Vide --"
             ]
+        },
+        "subject_1783254114": {
+            "nom": "Pierre",
+            "citation": "citation",
+            "entrave": "chaise",
+            "traits": "truc, bidule",
+            "equipement_emblematique": [
+                "un",
+                "dzeux"
+            ],
+            "equipement_standard": "",
+            "approches": {
+                "action": 2,
+                "discretion": 3,
+                "intellect": 3,
+                "social": 2
+            },
+            "langues": "Français",
+            "ancetre_prioritaire": "gardienne_du_feu",
+            "niveau_xp": 1,
+            "competences_actives": [
+                "COMBATTANT NÉ",
+                "-- Emplacement Vide --",
+                "-- Emplacement Vide --"
+            ]
         }
     },
     "competences_globales": {

@@ -130,7 +130,7 @@ def charger_donnees():
             "DÉPLACEMENTS STRATÉGIQUES": "Lorsque vous effectuez un test d'Action, vous pouvez considérer jusqu'à 1 Intellect comme 1 correspondance supplémentaire.",
             "FORMATION DE LA CONFRÉRIE": "Lorsque vous utilisez une arme secrète, vous pouvez considérer 1 Credo comme 1 correspondance supplémentaire. Ceci en plus de toute correspondance accordée by l'activation d'un équipement emblématique (arme secrète).",
             "HYPNOSE": "Lorsque vous effectuez un test Social, vous pouvez considérer jusqu'à 1 Discrétion comme une correspondance supplémentaire.",
-            "MOUVEMENTS TROMPEURS": "Lorsque vous effectuez un test d'Action lors d'une situation où vous faites appel à vos capacités de tromperie, vous pouvez considérer jusqu'à 2 Social comme 1 correspondance supplémentaire chacun.",
+            "MOUVEMENTS TROMPEURS": "Lorsque vous effectuez un test d'Action lors d'une situation où vous faites appel à vos capacités d'tromperie, vous pouvez considérer jusqu'à 2 Social comme 1 correspondance supplémentaire chacun.",
             "OBSERVATEUR": "Lorsque vous effectuez un test d'Intellect dans une situation où vous faites appel à vos capacités d'investigation, vous pouvez considérer jusqu'à 2 Discrétion comme une correspondance supplémentaire.",
             "PASSE-PASSE": "Lorsque vous essayez de dissimuler un petit objet ou d'en dérober un, vous pouvez ajouter 1 correspondance à tout test de Discrétion lié. En outre, lorsque vous effectuez un test d'Action ou Social, vous pouvez utiliser 2 Discrétion pour dérober un petit objet à une personne impliquée dans la scène.",
             "PRESSION": "Lorsque vous effectuez un test Social lors d'une situation où vous faites appel à vos capacités d'intimidation, vous pouvez considérer jusqu'à 2 Action comme 1 correspondance supplémentaire chacun.",
@@ -138,7 +138,7 @@ def charger_donnees():
             "SAPEUR": "Lorsque vous tentez de sabotez un appareil, vous pouvez ajouter 1 correspondance à tout test d'Intellect lié. De plus, lorsque vous effectuez un test d'Action ou de Discrétion, vous pouvez utiliser 2 Intellect pour créer un leurre ou une diversion durant la scène.",
             "SE CACHER AU GRAND JOUR": "Lorsque vous effectuez un test de Discrétion, vous pouvez considérer jusqu'à 1 Social comme une correspondance supplémentaire.",
             "SENS D'AIGLE": "Le Sens d'aigle affine vos sens au point de pouvoir percevoir les battements de cœur de votre cible dans la zone ou même prévoir sa prochaine action. De plus, vous pouvez entrapercevoir les souvenirs de vos cibles lorsque vous les tuez, obtenant ainsi toutes les informations qu'elles ont à offrir.",
-            "VISION D'AIGLE": "La Vision d'aigle est une forme de perception extrasensorielle, ou « sixième sens », et l'un des dons de vos gènes Isu. Vous pouvez aisément repérer les alliés, ennemis, objectifs, sources d'informations et cibles à courte portée. En outre, lorsque vous effectuez un test d'Approche, vous pouvez considérer 1 Intellect comme 1 correspondance supplémentaire."
+            "VISION D'AIGLE": "La Vision d'aigle est une forme de perception extrasensorielle, ou « sixième sens », et l'un des dons de vos gènes Isu. Vous pouvez aisément repérer les alliés, ennemis, objectives, sources d'informations et cibles à courte portée. En outre, lorsque vous effectuez un test d'Approche, vous pouvez considérer 1 Intellect comme 1 correspondance supplémentaire."
         },
         "ancetres_officiels": {
             "romulus": {
@@ -417,7 +417,7 @@ HTML_SKILL_CARD_TEMPLATE = """
         <span style="font-size: 0.65rem; background: #385d6e; color: #cbd7df; padding: 2px 6px; border-radius: 4px; font-weight: bold;">🧬 ABSTERGO CORE</span>
     </div>
     <div style="font-size: 0.9rem; line-height: 1.5; color: #dbe4e9; margin-bottom: 15px;">{description}</div>
-    <div style="position: absolute; bottom: 10px; left: 18px; font-size: 0.7rem; text-transform: uppercase; color: #879ea9; font-weight: bold;">▮▮▮ 🗃️ CARTE COMPÉTENCE ANIMUS</div>
+    <div style="position: absolute; bottom: 10px; left: 18px; font-size: 0.7 gram; text-transform: uppercase; color: #879ea9; font-weight: bold;">▮▮▮ 🗃️ CARTE COMPÉTENCE ANIMUS</div>
 </div>
 """
 
@@ -512,22 +512,20 @@ with tab_descendants:
     # =========================================================================
     # 🗃️ BARRE D'OUTILS ET ENTRÉES SYSTÈME (INTERFACE RÉALIGNÉE)
     # =========================================================================
-    # Ligne 1 : Les actions principales alignées côte à côte
     col_actions_1, col_actions_2, col_vides = st.columns([4, 4, 4])
     
     with col_actions_1:
         if st.button("➕ Créer un nouveau descendant", type="primary", use_container_width=True, key="btn_init_wizard_desc"):
             st.session_state.edit_target_id = "NOUVEAU"
+            st.session_state.wizard_step = 1
             st.rerun()
             
     with col_actions_2:
         if st.button("📥 Importer agent au format JSON", use_container_width=True, key="btn_trigger_import_dialog"):
             protocole_importation_solo()
 
-    # Espacement visuel discret entre les boutons et la recherche
     st.write("") 
 
-    # Ligne 2 : La recherche prend une place propre en dessous
     recherche_desc = st.text_input(
         "🔍 Rechercher un agent par son identité...", 
         "", 
@@ -596,32 +594,43 @@ with tab_descendants:
         step = st.session_state.wizard_step
         col_form_panel, col_preview_panel = st.columns([6, 6])
         
+        # =========================================================================
+        # 🔑 DICTIONNAIRES DE CONVERSION CENTRALISÉS (DISPONIBLES POUR TOUTES LES ÉTAPES)
+        # =========================================================================
+        ancetres_par_nom = {v["nom"]: k for k, v in data["ancetres_officiels"].items()}
+        liste_noms_propres = list(ancetres_par_nom.keys())
+        
         with col_form_panel:
             if step == 1:
                 st.markdown("#### 👤 Étape 1 : Identité & Philosophie")
                 w_nom = st.text_input("Nom de l'Agent *", value=st.session_state.get("w_nom", ""), key="input_wizard_nom")
-                w_cit = st.text_input("Citation / Devise Fondamentale", value=st.session_state.get("w_cit", ""), key="input_wizard_cit")
+                w_cit = st.text_input("Citation / Devise Fondamentale *", value=st.session_state.get("w_cit", ""), key="input_wizard_cit")
                 
                 st.write("---")
                 st.markdown("##### 📜 Liaison Génétique Initiale")
-                ancetres_par_nom = {v["nom"]: v for v in data["ancetres_officiels"].values()}
-                curr_anc_saved = st.session_state.get("wiz_anc_select", list(ancetres_par_nom.keys())[0])
-                if curr_anc_saved not in ancetres_par_nom:
-                    curr_anc_saved = list(ancetres_par_nom.keys())[0]
+                
+                # Récupération de la valeur mémorisée en priorité
+                curr_anc_saved = st.session_state.get("memo_ancetre", st.session_state.get("wiz_anc_select"))
+                
+                if curr_anc_saved in data["ancetres_officiels"]:
+                    curr_anc_saved = data["ancetres_officiels"][curr_anc_saved]["nom"]
+                
+                if curr_anc_saved not in liste_noms_propres:
+                    curr_anc_saved = liste_noms_propres[0]
                     
-                idx_anc_wiz = list(ancetres_par_nom.keys()).index(curr_anc_saved)
-                w_anc_lies = st.selectbox("Lier à l'ancêtre témoin :", list(ancetres_par_nom.keys()), index=idx_anc_wiz, key="wiz_anc_select")
+                idx_anc_wiz = liste_noms_propres.index(curr_anc_saved)
+                w_anc_lies = st.selectbox("Lier à l'ancêtre témoin :", liste_noms_propres, index=idx_anc_wiz, key="wiz_anc_select")
                 
                 st.write("")
                 if st.button("➡️ Continuer vers les Approches", type="primary", use_container_width=True):
-                    if w_nom.strip():
+                    if w_nom.strip() and w_cit.strip():
                         st.session_state.w_nom = w_nom.strip()
                         st.session_state.w_cit = w_cit.strip()
-                        # Plus besoin d'assigner l'ancêtre, le selectbox l'a déjà fait tout seul grâce à sa 'key' !
+                        st.session_state.memo_ancetre = w_anc_lies
                         st.session_state.wizard_step = 2
                         st.rerun()
                     else:
-                        st.error("❌ Le nom de l'agent est requis pour continuer.")
+                        st.error("❌ Le nom de l'agent et la citation/devise (*) sont requis pour continuer.")
 
             elif step == 2:
                 st.markdown("#### 📊 Étape 2 : Approches & Équipement")
@@ -640,12 +649,10 @@ with tab_descendants:
                 w_emb1 = st.text_input("Objet Emblématique 1 ✦ *", value=st.session_state.get("w_emb1", ""), key="wiz_emb1")
                 w_emb2 = st.text_input("Objet Emblématique 2 ✦ *", value=st.session_state.get("w_emb2", ""), key="wiz_emb2")
                 
-                w_ord1 = st.text_input("Matériel standard 1", value=st.session_state.get("wiz_ord1", ""), key="wiz_ord1")
-                w_ord2 = st.text_input("Matériel standard 2", value=st.session_state.get("wiz_ord2", ""), key="wiz_ord2")
-                w_ord3 = st.text_input("Matériel standard 3", value=st.session_state.get("wiz_ord3", ""), key="wiz_ord3")
-                w_ord4 = st.text_input("Matériel standard 4", value=st.session_state.get("wiz_ord4", ""), key="wiz_ord4")
-
-                st.write("")
+                st.text_input("Matériel standard 1", value=st.session_state.get("wiz_ord1", ""), key="wiz_ord1")
+                st.text_input("Matériel standard 2", value=st.session_state.get("wiz_ord2", ""), key="wiz_ord2")
+                st.text_input("Matériel standard 3", value=st.session_state.get("wiz_ord3", ""), key="wiz_ord3")
+                st.text_input("Matériel standard 4", value=st.session_state.get("wiz_ord4", ""), key="wiz_ord4")
                 c_nav1, c_nav2 = st.columns(2)
                 if c_nav1.button("⬅️ Retour", key="back_to_1", use_container_width=True):
                     st.session_state.wizard_step = 1
@@ -655,12 +662,16 @@ with tab_descendants:
                         scores_attendus = sorted([int(x) for x in repart_cible.split(", ")])
                         scores_saisis = sorted([w_act, w_disc, w_intel, w_soc])
                         
-                        st.session_state.save_ord1 = w_ord1.strip()
-                        st.session_state.save_ord2 = w_ord2.strip()
-                        st.session_state.save_ord3 = w_ord3.strip()
-                        st.session_state.save_ord4 = w_ord4.strip()
                         st.session_state.w_emb1 = w_emb1.strip()
                         st.session_state.w_emb2 = w_emb2.strip()
+                        
+                        # =========================================================================
+                        # 🎒 COFFRE-FORT : SAUVEGARDE DES ÉQUIPEMENTS STANDARD EN MÉMOIRE TAMPON
+                        # =========================================================================
+                        st.session_state.save_ord1 = st.session_state.get("wiz_ord1", "").strip()
+                        st.session_state.save_ord2 = st.session_state.get("wiz_ord2", "").strip()
+                        st.session_state.save_ord3 = st.session_state.get("wiz_ord3", "").strip()
+                        st.session_state.save_ord4 = st.session_state.get("wiz_ord4", "").strip()
                         
                         if is_new:
                             if scores_saisis == scores_attendus:
@@ -706,12 +717,20 @@ with tab_descendants:
                     c1_saved = st.session_state.get("wiz_slot_comp1", "-- Emplacement Vide --")
                     c2_saved = st.session_state.get("wiz_slot_comp2", "-- Emplacement Vide --")
                     c3_saved = st.session_state.get("wiz_slot_comp3", "-- Emplacement Vide --")
-                    f_anc = st.session_state.get("wiz_anc_select", "")
+                    
+                    # Décodage stable depuis la mémoire tampon
+                    nom_selectionne = st.session_state.get("memo_ancetre", st.session_state.get("wiz_anc_select", ""))
+                    if nom_selectionne in data["ancetres_officiels"]:
+                        nom_selectionne = data["ancetres_officiels"][nom_selectionne]["nom"]
+                        
+                    ancetres_inverse_dict = {v["nom"]: k for k, v in data["ancetres_officiels"].items()}
+                    f_anc = ancetres_inverse_dict.get(nom_selectionne, nom_selectionne.lower())
 
-                    if f_nom and f_emb1 and f_emb2 and f_t1 and f_t2 and f_ent:
+                    if f_nom and f_cit and f_emb1 and f_emb2 and f_t1 and f_t2 and f_ent:
                         import time
                         fid = target if not is_new else f"subject_{int(time.time())}"
                         
+                        # Extraction depuis le coffre-fort persistant
                         o_list = [
                             st.session_state.get("save_ord1", ""),
                             st.session_state.get("save_ord2", ""),
@@ -746,22 +765,41 @@ with tab_descendants:
                         st.session_state.wizard_step = 1
                         st.rerun()
                     else:
-                        st.error("❌ Erreur : Veuillez remplir toutes les particularités requises (*) à l'étape 3.")
+                        st.error("❌ Erreur : Veuillez remplir toutes les particularités requises (*) pour finaliser l'enregistrement.")
 
         with col_preview_panel:
+            ancetres_par_nom = {v["nom"]: v for v in data["ancetres_officiels"].values()}
+            
+            # Lecture sécurisée via la mémoire tampon ou le widget direct
+            curr_anc = st.session_state.get("memo_ancetre", st.session_state.get("wiz_anc_select"))
+            
+            if curr_anc in data["ancetres_officiels"]:
+                curr_anc = data["ancetres_officiels"][curr_anc]["nom"]
+                
+            if not curr_anc or curr_anc not in ancetres_par_nom:
+                curr_anc = list(ancetres_par_nom.keys())[0]
+            
+            p_a = ancetres_par_nom[curr_anc]
+
             if step in [1, 2]:
                 st.markdown("<b style='color:#385d6e;'>📜 LIAISON GÉNÉTIQUE : APERÇU DE L'ANCESTRE</b>", unsafe_allow_html=True)
-                
-                # On récupère l'ancêtre sélectionné en direct dans le widget de session
-                ancetres_par_nom = {v["nom"]: v for v in data["ancetres_officiels"].values()}
-                curr_anc = st.session_state.get("wiz_anc_select")
-                
-                # Si aucun n'est en session (premier lancement), on prend le premier de la liste
-                if not curr_anc:
-                    curr_anc = list(ancetres_par_nom.keys())[0]
-                    
-                if curr_anc in ancetres_par_nom:
-                    p_a = ancetres_par_nom[curr_anc]
+                st.markdown(HTML_ANCESTRE_TEMPLATE.format(
+                    nom=p_a["nom"], 
+                    periode=p_a.get("periode", "Inconnue"), 
+                    citation=p_a["citation"], 
+                    action=p_a["action"], 
+                    discretion=p_a["discretion"], 
+                    intellect=p_a["intellect"], 
+                    social=p_a["social"], 
+                    equipement_html=formater_equipement_html(p_a["equipement"]), 
+                    traits=p_a["traits"], 
+                    entrave=p_a["entrave"], 
+                    langues=p_a.get("langues", "Inconnu")
+                ), unsafe_allow_html=True)
+            
+            elif step == 3:
+                st.markdown("<b style='color:#385d6e;'>📜 CONFIGURATION DE LA MÉMOIRE GÉNÉTIQUE</b>", unsafe_allow_html=True)
+                with st.expander(f"🔍 Rappel de la fiche de l'Ancêtre ({p_a['nom']})", expanded=True):
                     st.markdown(HTML_ANCESTRE_TEMPLATE.format(
                         nom=p_a["nom"], 
                         periode=p_a.get("periode", "Inconnue"), 
@@ -775,30 +813,6 @@ with tab_descendants:
                         entrave=p_a["entrave"], 
                         langues=p_a.get("langues", "Inconnu")
                     ), unsafe_allow_html=True)
-            
-            elif step == 3:
-                st.markdown("<b style='color:#385d6e;'>📜 CONFIGURATION DE LA MÉMOIRE GÉNÉTIQUE</b>", unsafe_allow_html=True)
-                # On laisse l'expandeur informatif à l'étape 3, mais sans le selectbox doublon qui a migré à l'étape 1
-                ancetres_par_nom = {v["nom"]: v for v in data["ancetres_officiels"].values()}
-                curr_anc_saved = st.session_state.get("wiz_anc_select", list(ancetres_par_nom.keys())[0])
-                
-                if curr_anc_saved in ancetres_par_nom:
-                    p_a = ancetres_par_nom[curr_anc_saved]
-                    with st.expander(f"🔍 Rappel de la fiche de l'Ancêtre ({p_a['nom']})", expanded=False):
-                        st.markdown(HTML_ANCESTRE_TEMPLATE.format(
-                            nom=p_a["nom"], 
-                            periode=p_a.get("periode", "Inconnue"), 
-                            citation=p_a["citation"], 
-                            action=p_a["action"], 
-                            discretion=p_a["discretion"], 
-                            intellect=p_a["intellect"], 
-                            social=p_a["social"], 
-                            equipement_html=formater_equipement_html(p_a["equipement"]), 
-                            traits=p_a["traits"], 
-                            entrave=p_a["entrave"], 
-                            langues=p_a.get("langues", "Inconnu")
-                        ), unsafe_allow_html=True)
-
 
                 st.write("---")
                 st.markdown("<b style='color:#385d6e;'>🎴 SÉLECTION ET SYNC DES SKILLS DE L'ANIMUM</b>", unsafe_allow_html=True)
@@ -813,8 +827,6 @@ with tab_descendants:
                 if w_c1 != "-- Emplacement Vide --":
                     st.markdown(HTML_SKILL_CARD_TEMPLATE.format(titre=w_c1, description=data['competences_globales'][w_c1]), unsafe_allow_html=True)
                 
-                # Slot 2
-                # Récupération sécurisée du niveau d'XP actuel
                 niveau_xp_actuel = st.session_state.get("w_xp_level", 1)
 
                 # Slot 2
@@ -960,6 +972,10 @@ with tab_descendants:
                     if std_text: inv_total.extend([x.strip() for x in std_text.split(",") if x.strip()])
                     
                     ancetre_nom = profil.get("ancetre_prioritaire", "Aucun")
+                    # Conversion inverse de sécurité pour l'affichage lisible de l'ancêtre lié
+                    if ancetre_nom in data["ancetres_officiels"]:
+                        ancetre_nom = data["ancetres_officiels"][ancetre_nom]["nom"]
+                        
                     comps_actives = profil.get("competences_actives", ["-- Emplacement Vide --", "-- Emplacement Vide --", "-- Emplacement Vide --"])
                     atouts_presents = [c for c in comps_actives if c != "-- Emplacement Vide --"]
                     
